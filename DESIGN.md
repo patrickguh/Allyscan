@@ -70,14 +70,19 @@ components:
 
 ## Overview
 
-Two layers, one palette:
+One system on every page, built on the Taste Skill kit (`static/assets/`, copied from
+`.claude/skills/design-taste-frontend/assets`):
 
-- **The home page** (`templates/scans.html`, `static/home.css`) is built with the Taste Skill kit
-  (`static/assets/`, copied from `.claude/skills/design-taste-frontend/assets`). It is a software page:
-  one section per screen, the product's own report shown as live HTML, one effect and two scroll moments.
-  The plan and the deal that produced it are in `.taste-skill/plan.md`.
-- **The app pages** (report, scan history, how it works, settings, sign-in) use `static/style.css`: the
-  same tokens and fonts in a denser working layout with a sidebar, checked with Impeccable.
+- **Shared:** `templates/fragments/site.html` (head assets, the nav, the footer, the kit's scripts) and
+  `static/site.css` (grades, logo, impact and status tags, the report window, inner-page layout).
+- **The report window** (`templates/fragments/report-window.html`, `static/report-window.js`) is the real
+  report UI: the pages the crawl found on the left, the open page's violations on the right. The report page
+  uses it with the scan's data; the home page uses the same fragment with the curated example scan's data, so
+  the picture of the product is the product. With no example scan the home page says so instead of inventing one.
+- **The home page** (`templates/scans.html`, `static/home.css`) is the kit's software landing page: one
+  section per screen, one effect and two scroll moments. Its plan and deal are in `.taste-skill/plan.md`.
+- **Inner pages** (report, how it works, my scans, settings, sign-in) use the same nav and controls in a
+  working layout at their natural height.
 
 Dark is the default for every visitor. Light (Settings, or System on a light OS) swaps to the deal's
 second palette, stone and blueprint blue. Every text pair is checked to WCAG 2.0 AA, and axe-core reports
@@ -102,12 +107,12 @@ URLs, selectors, counts. Loaded from Google Fonts.
 
 - Home: the kit's 12-column `.wrap` (1280 at 1440), sections exactly one or two screens, hero alone on the
   first screen (triptych: headline, a collage of report pieces, the scan form).
-- App pages: a 240px sidebar (dark rail in both themes) and a left-aligned work area up to 64rem.
+- Inner pages: the same fixed nav and `.wrap`, a two-column head (title left, the work right) and sections at natural height.
 
 ## Components
 
-- **Report window** (home, `#report`): the kit's `window` fragment as the page list and its `doc`
-  fragment as the open page with marked issues. Demonstration data only (no real site is named).
+- **Report window:** see Overview. Every number on the home page comes from the example scan, never
+  from made-up data.
 - **Criterion index** (report page): every failed WCAG criterion in spec order with name, level and
   count, from axe-core's `wcagNNN` tags via `WcagCriterion.java`.
 - **Diagrams:** the kit's lanes (crawl) and hub (stack, with the real Spring, Postgres, Playwright, Java
@@ -121,6 +126,6 @@ URLs, selectors, counts. Loaded from Google Fonts.
 - Keep one filled button style per view and the main action worded "Scan a website" everywhere.
 
 ### Don't
-- Don't edit files under `static/assets/` (the kit); write page CSS in `home.css`.
+- Don't edit files under `static/assets/` (the kit); write page CSS in `home.css` or `site.css`.
 - Don't add kicker labels, side-stripe borders, glows or a second accent.
 - Don't invent customers, figures or quotes on the home page.

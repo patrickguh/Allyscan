@@ -1,93 +1,46 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!doctype html>
+<html lang="en" data-type="software" data-radius="sharp" data-ground="sky" data-buttons="tonal" data-motion
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Allyscan &mdash; How it works</title>
-    <link rel="stylesheet" href="/style.css">
-    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235ab9fc'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='%230a0d14' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<th:block th:replace="~{fragments/site :: assets}"></th:block>
+<title>Allyscan: how a scan works</title>
+<meta name="description" content="What happens between pasting a link into Allyscan and opening its accessibility report, step by step.">
+<link rel="stylesheet" href="/assets/diagrams/diagram.css">
 </head>
 <body>
-<div class="app-shell">
-    <div th:replace="~{fragments/shell :: sidebar(active='how-it-works')}"></div>
-    <div class="sidebar-backdrop"></div>
+<header th:replace="~{fragments/site :: nav(current='how-it-works')}"></header>
 
-    <div class="app-main">
-        <div th:replace="~{fragments/shell :: topbar}"></div>
-
-        <main class="app-main-inner">
-            <h1 class="page-heading">From a URL to a fixed page</h1>
-            <p class="page-lede">Here's exactly what happens between pasting in a link and knowing what to fix, start to finish, no steps skipped.</p>
-
-            <ol class="steps">
-                <li class="step">
-                    <span class="step-num">1</span>
-                    <div class="step-body">
-                        <h2>Paste in a URL</h2>
-                        <p>Drop any website's address into the scan box on the home page. No account needed &mdash; a guest scan works as a one-time view.</p>
-                    </div>
-                </li>
-                <li class="step">
-                    <span class="step-num">2</span>
-                    <div class="step-body">
-                        <h2>The job gets queued</h2>
-                        <p>Allyscan writes a row to Postgres with status <code>QUEUED</code> and hands the page back to you immediately &mdash; a full-site scan can take minutes, so nothing waits on it.</p>
-                    </div>
-                </li>
-                <li class="step">
-                    <span class="step-num">3</span>
-                    <div class="step-body">
-                        <h2>A worker picks it up</h2>
-                        <p>A background worker polls the queue every couple of seconds, claims the job, and marks it <code>RUNNING</code>.</p>
-                    </div>
-                </li>
-                <li class="step">
-                    <span class="step-num">4</span>
-                    <div class="step-body">
-                        <h2>The site gets crawled</h2>
-                        <p>A same-host crawler follows links breadth-first from the URL you gave it, discovering up to 20 pages to check.</p>
-                    </div>
-                </li>
-                <li class="step">
-                    <span class="step-num">5</span>
-                    <div class="step-body">
-                        <h2>Every page gets scanned</h2>
-                        <p>A real, headless Chromium browser opens each page and runs an axe-core accessibility scan against it &mdash; the same engine used across the industry for WCAG 2.0 AA / AODA checks.</p>
-                    </div>
-                </li>
-                <li class="step">
-                    <span class="step-num">6</span>
-                    <div class="step-body">
-                        <h2>Violations are recorded</h2>
-                        <p>Every failing rule is saved per page, tagged by category (ARIA, color contrast, forms, keyboard access, and more) and by impact &mdash; critical, serious, moderate, or minor.</p>
-                    </div>
-                </li>
-                <li class="step">
-                    <span class="step-num">7</span>
-                    <div class="step-body">
-                        <h2>You open the report</h2>
-                        <p>Once the job flips to <code>DONE</code>, the report shows every violation grouped by page, filterable by category, and indexed by the WCAG success criteria that failed.</p>
-                    </div>
-                </li>
-                <li class="step step-final">
-                    <span class="step-num">8</span>
-                    <div class="step-body">
-                        <h2>Click through to fix it</h2>
-                        <p>Each violation's rule name links straight to that rule's page on <strong>Deque University</strong> &mdash; axe-core's own documentation &mdash; with a plain-English explanation of the problem and exactly how to fix it in your markup.</p>
-                    </div>
-                </li>
-            </ol>
-
-            <div class="law-links">
-                <a href="/" class="cta-primary">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                    Try a scan
-                </a>
-            </div>
-        </main>
+<main id="top">
+  <div class="page">
+    <div class="wrap">
+      <div class="split-2">
+        <div class="page-head">
+          <h1>From a link to a list of fixes</h1>
+          <p>What happens between pasting in a link and knowing what to fix, start to finish.</p>
+          <div class="box hiw-diagram" data-ground-panel>
+            <div class="dg" data-diagram data-dg-still><script type="application/json">{"layout": "lanes", "alt": "One link goes to the crawler, which hands the pages it found to headless Chromium to be scanned.", "curve": "curve", "input": {"label": "Link", "icon": "ui:globe", "meta": "your URL"}, "core": {"label": "Crawler", "icon": "playwright", "meta": "20 pages max"}, "lanes": [{"label": "/", "icon": "chrome", "meta": "axe-core", "done": true}, {"label": "/about", "icon": "chrome", "meta": "axe-core", "done": true}, {"label": "/contact", "icon": "chrome", "meta": "axe-core", "done": true}]}</script></div>
+          </div>
+        </div>
+        <ol class="steps-list">
+          <li><span class="n" aria-hidden="true">1</span><div><h2>Paste in a URL</h2><p>Drop any website's address into the scan box on the home page. No account needed, a guest scan works as a one-time view.</p></div></li>
+          <li><span class="n" aria-hidden="true">2</span><div><h2>The job gets queued</h2><p>Allyscan writes a row to Postgres with status <code>QUEUED</code> and hands the page back to you immediately, a full-site scan can take minutes, so nothing waits on it.</p></div></li>
+          <li><span class="n" aria-hidden="true">3</span><div><h2>A worker picks it up</h2><p>A background worker polls the queue every couple of seconds, claims the job, and marks it <code>RUNNING</code>.</p></div></li>
+          <li><span class="n" aria-hidden="true">4</span><div><h2>The site gets crawled</h2><p>A same-host crawler follows links breadth-first from the URL you gave it, discovering up to 20 pages to check.</p></div></li>
+          <li><span class="n" aria-hidden="true">5</span><div><h2>Every page gets scanned</h2><p>A real, headless Chromium browser opens each page and runs an axe-core accessibility scan against it, the same engine used across the industry for WCAG 2.0 AA / AODA checks.</p></div></li>
+          <li><span class="n" aria-hidden="true">6</span><div><h2>Violations are recorded</h2><p>Every failing rule is saved per page, tagged by category (ARIA, color contrast, forms, keyboard access, and more) and by impact, critical, serious, moderate, or minor.</p></div></li>
+          <li><span class="n" aria-hidden="true">7</span><div><h2>You open the report</h2><p>Once the job flips to <code>DONE</code>, the report shows every violation grouped by page, filterable by category, and indexed by the WCAG success criteria that failed.</p></div></li>
+          <li><span class="n" aria-hidden="true">8</span><div><h2>Click through to fix it</h2><p>Each violation's rule name links straight to that rule's page on <strong>Deque University</strong>, axe-core's own documentation, with a plain-English explanation of the problem and exactly how to fix it in your markup.</p></div></li>
+        </ol>
+      </div>
+      <div class="row-actions">
+        <a class="btn btn--primary" href="/#scan">Scan a website</a>
+        <a class="link" th:if="${exampleJob}" th:href="@{'/scans/' + ${exampleJob.id} + '/report'}">See an example report</a>
+      </div>
     </div>
-</div>
-<script defer src="/shell.js"></script>
+  </div>
+</main>
+<footer th:replace="~{fragments/site :: foot}"></footer>
+<th:block th:replace="~{fragments/site :: scripts}"></th:block>
+<script type="module" src="/assets/diagrams/mount.js"></script>
 </body>
 </html>

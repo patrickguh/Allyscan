@@ -1,57 +1,47 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" data-type="software" data-radius="sharp" data-ground="sky" data-buttons="tonal" data-motion
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Allyscan &mdash; Log in</title>
-    <link rel="stylesheet" href="/style.css">
-    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235ab9fc'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='%230a0d14' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<th:block th:replace="~{fragments/site :: assets}"></th:block>
+<title>Allyscan: log in</title>
+<meta name="description" content="Log in to Allyscan to see your private scan history.">
 </head>
 <body>
-<div class="page-narrow">
-<header>
-    <div class="logo-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 17h4l3-8h6l3 8" />
-            <circle cx="6" cy="19" r="1.5" fill="currentColor" stroke="none" />
-            <circle cx="18" cy="19" r="1.5" fill="currentColor" stroke="none" />
-        </svg>
+<header th:replace="~{fragments/site :: nav(current='login')}"></header>
+
+<main id="top">
+  <div class="page">
+    <div class="wrap">
+      <div class="split-2">
+        <div class="page-head">
+          <h1>Log in</h1>
+          <p>Your scans stay in your account, private to you, for as long as you keep it.</p>
+        </div>
+        <div class="box stack narrow">
+          <div class="notice" role="status" th:if="${registered}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg><p>Account created. Log in below.</p></div>
+          <div class="notice" role="status" th:if="${passwordReset}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg><p>Password updated. Log in below.</p></div>
+          <div class="notice notice--error" role="alert" th:if="${param.error}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5 14 13H2z"/><path d="M8 6.5v3M8 11.2v.1"/></svg><p>Incorrect email or password.</p></div>
+          <form method="post" th:action="@{/login}" class="form form--1" aria-label="Log in">
+            <div class="field field--full">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autofocus autocomplete="email" data-error="Write the email you signed up with">
+            </div>
+            <div class="field field--full">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required autocomplete="current-password" data-error="Write your password">
+            </div>
+            <label class="check field--full" for="remember-me"><input type="checkbox" id="remember-me" name="remember-me"> Keep me signed in on this device</label>
+            <div class="btn-row"><button class="btn btn--primary btn--block" type="submit">Log in</button></div>
+            <p class="form__status" data-form-status></p>
+          </form>
+          <p class="empty"><a href="/forgot-password">Forgot your password?</a></p>
+          <p class="empty">No account yet? <a href="/register">Sign up</a></p>
+        </div>
+      </div>
     </div>
-    <div>
-        <h1>Allyscan</h1>
-        <nav><a href="/">&larr; Back to home</a></nav>
-    </div>
-</header>
-
-<main>
-    <section class="auth-card" aria-labelledby="login-heading">
-        <h2 id="login-heading">Log in</h2>
-
-        <div class="flash" role="status" th:if="${registered}">Account created &mdash; log in below.</div>
-        <div class="flash" role="status" th:if="${passwordReset}">Password updated &mdash; log in below.</div>
-        <p class="auth-error" th:if="${param.error}" role="alert">Incorrect email or password.</p>
-
-        <form method="post" th:action="@{/login}" class="auth-form">
-            <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required autofocus autocomplete="email">
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required autocomplete="current-password">
-            </div>
-            <div class="remember-me-row">
-                <input type="checkbox" id="remember-me" name="remember-me">
-                <label for="remember-me">Keep me signed in on this device</label>
-            </div>
-            <button type="submit">Log in</button>
-        </form>
-
-        <p class="auth-switch"><a href="/forgot-password">Forgot your password?</a></p>
-        <p class="auth-switch">No account yet? <a href="/register">Sign up</a></p>
-    </section>
+  </div>
 </main>
-</div>
+<footer th:replace="~{fragments/site :: foot}"></footer>
+<th:block th:replace="~{fragments/site :: scripts}"></th:block>
 </body>
 </html>

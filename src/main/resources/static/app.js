@@ -14,7 +14,7 @@
     }
 
     function hasActiveRows() {
-        var statuses = document.querySelectorAll("tr[data-job-id] .status");
+        var statuses = document.querySelectorAll("tr[data-job-id] .st");
         for (var i = 0; i < statuses.length; i++) {
             if (isActive(statuses[i].textContent.trim())) {
                 return true;
@@ -24,9 +24,9 @@
     }
 
     function updateRow(row, job) {
-        var statusEl = row.querySelector(".status");
+        var statusEl = row.querySelector(".st");
         if (statusEl && statusEl.textContent.trim() !== job.status) {
-            statusEl.className = "status status-" + job.status;
+            statusEl.className = "st st--" + job.status;
             statusEl.textContent = job.status;
         }
 

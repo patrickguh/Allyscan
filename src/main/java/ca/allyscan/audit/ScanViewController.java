@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -45,15 +47,116 @@ public class ScanViewController {
         return userRepository.findByEmail(authentication.getName()).orElse(null);
     }
 
-    public record PageReport(Page page, List<Violation> violations) { }
+    /** One scanned page and its violations, with the small derived values the report window shows. */
+    public record PageReport(Page page, List<Violation> violations) {
+
+        private static final List<String> IMPACTS = List.of("critical", "serious", "moderate", "minor");
+
+        /** The page's path ("/book"), shorter than the full URL for the page list. */
+        public String path() {
+            try {
+                URI uri = new URI(page.getUrl());
+                String path = uri.getRawPath();
+                if (path == null || path.isEmpty()) path = "/";
+                return uri.getRawQuery() == null ? path : path + "?" + uri.getRawQuery();
+            } catch (URISyntaxException e) {
+                return page.getUrl();
+            }
+        }
+
+        /** The page title when the page has one, else its path. */
+        public String label() {
+            String title = page.getTitle();
+            return title == null || title.isBlank() ? path() : title;
+        }
+
+        public long count(String impact) {
+            return violations.stream().filter(v -> impact.equalsIgnoreCase(v.getImpact())).count();
+        }
+
+        /** The most serious impact on the page ("critical" first), or null when it has none. */
+        public String worstImpact() {
+            return IMPACTS.stream().filter(i -> count(i) > 0).findFirst().orElse(null);
+        }
+
+        /** Violations ordered most serious first, so the top of each page's list is what to fix first. */
+        public List<Violation> sortedViolations() {
+            return violations.stream()
+                    .sorted(Comparator.comparingInt(v -> {
+                        int i = IMPACTS.indexOf(v.getImpact() == null ? "" : v.getImpact().toLowerCase());
+                        return i < 0 ? IMPACTS.size() : i;
+                    }))
+                    .toList();
+        }
+    }
 
     public record CategorySummary(String slug, String label, long count) { }
 
     public record CriterionSummary(WcagCriterion criterion, long count) { }
 
+    /** Everything the report window needs for one scan job. */
+    public record Report(List<PageReport> pages, int totalViolations, List<CategorySummary> categories,
+                         List<CriterionSummary> criteria, long bestPracticeCount) {
+
+        /** Violations of one impact across every page. */
+        public long count(String impact) {
+            return pages.stream().mapToLong(pr -> pr.count(impact)).sum();
+        }
+
+        /** The most serious violation of the whole scan (the first page's first), or null when there is none. */
+        public Violation worst() {
+            return pages.stream()
+                    .flatMap(pr -> pr.sortedViolations().stream().limit(1))
+                    .min(Comparator.comparingInt(v -> {
+                        int i = List.of("critical", "serious", "moderate", "minor")
+                                .indexOf(v.getImpact() == null ? "" : v.getImpact().toLowerCase());
+                        return i < 0 ? 4 : i;
+                    }))
+                    .orElse(null);
+        }
+    }
+
+    private Report buildReport(UUID jobId) {
+        List<PageReport> pages = pageRepository.findByScanJobId(jobId).stream()
+                .map(page -> new PageReport(page, violationRepository.findByPageId(page.getId())))
+                .sorted(Comparator.comparingInt((PageReport pr) -> pr.violations().size()).reversed())
+                .toList();
+
+        int total = pages.stream().mapToInt(pr -> pr.violations().size()).sum();
+
+        List<CategorySummary> categories = pages.stream()
+                .flatMap(pr -> pr.violations().stream())
+                .collect(Collectors.groupingBy(Violation::getCategory, Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new CategorySummary(e.getKey().getSlug(), e.getKey().getLabel(), e.getValue()))
+                .sorted(Comparator.comparingLong(CategorySummary::count).reversed())
+                .toList();
+
+        List<CriterionSummary> criteria = pages.stream()
+                .flatMap(pr -> pr.violations().stream())
+                .flatMap(v -> v.getSuccessCriteria().stream())
+                .collect(Collectors.groupingBy(c -> c, Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new CriterionSummary(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparing(CriterionSummary::criterion, WcagCriterion.SPEC_ORDER))
+                .toList();
+
+        long bestPractice = pages.stream()
+                .flatMap(pr -> pr.violations().stream())
+                .filter(v -> v.getSuccessCriteria().isEmpty())
+                .count();
+
+        return new Report(pages, total, categories, criteria, bestPractice);
+    }
+
     @GetMapping("/")
     public String home(Authentication authentication, Model model) {
-        scanJobRepository.findFirstByIsExampleTrue().ifPresent(job -> model.addAttribute("exampleJob", job));
+        scanJobRepository.findFirstByIsExampleTrue().ifPresent(job -> {
+            model.addAttribute("exampleJob", job);
+            // the home page shows the curated example scan in the real report window, so the
+            // picture of the product is the product
+            model.addAttribute("exampleReport", buildReport(job.getId()));
+        });
 
         User user = currentUser(authentication);
         if (user != null) {
@@ -65,7 +168,8 @@ public class ScanViewController {
     }
 
     @GetMapping("/how-it-works")
-    public String howItWorks() {
+    public String howItWorks(Model model) {
+        scanJobRepository.findFirstByIsExampleTrue().ifPresent(job -> model.addAttribute("exampleJob", job));
         return "how-it-works";
     }
 
@@ -94,40 +198,8 @@ public class ScanViewController {
             scanService.recordAnonymousView(id);
         }
 
-        List<PageReport> pageReports = pageRepository.findByScanJobId(id).stream()
-                .map(page -> new PageReport(page, violationRepository.findByPageId(page.getId())))
-                .toList();
-
-        int totalViolations = pageReports.stream().mapToInt(pr -> pr.violations().size()).sum();
-
-        List<CategorySummary> categorySummaries = pageReports.stream()
-                .flatMap(pr -> pr.violations().stream())
-                .collect(Collectors.groupingBy(Violation::getCategory, Collectors.counting()))
-                .entrySet().stream()
-                .map(e -> new CategorySummary(e.getKey().getSlug(), e.getKey().getLabel(), e.getValue()))
-                .sorted(Comparator.comparingLong(CategorySummary::count).reversed())
-                .toList();
-
-        List<CriterionSummary> criterionSummaries = pageReports.stream()
-                .flatMap(pr -> pr.violations().stream())
-                .flatMap(v -> v.getSuccessCriteria().stream())
-                .collect(Collectors.groupingBy(c -> c, Collectors.counting()))
-                .entrySet().stream()
-                .map(e -> new CriterionSummary(e.getKey(), e.getValue()))
-                .sorted(Comparator.comparing(CriterionSummary::criterion, WcagCriterion.SPEC_ORDER))
-                .toList();
-
-        long bestPracticeCount = pageReports.stream()
-                .flatMap(pr -> pr.violations().stream())
-                .filter(v -> v.getSuccessCriteria().isEmpty())
-                .count();
-
         model.addAttribute("job", job);
-        model.addAttribute("pageReports", pageReports);
-        model.addAttribute("totalViolations", totalViolations);
-        model.addAttribute("categorySummaries", categorySummaries);
-        model.addAttribute("criterionSummaries", criterionSummaries);
-        model.addAttribute("bestPracticeCount", bestPracticeCount);
+        model.addAttribute("report", buildReport(id));
         return "scan-detail";
     }
 }

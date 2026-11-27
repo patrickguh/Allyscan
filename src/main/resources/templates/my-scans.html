@@ -1,44 +1,43 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!doctype html>
+<html lang="en" data-type="software" data-radius="sharp" data-ground="sky" data-buttons="tonal" data-motion
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Allyscan &mdash; My Scans</title>
-    <link rel="stylesheet" href="/style.css">
-    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235ab9fc'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='%230a0d14' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<th:block th:replace="~{fragments/site :: assets}"></th:block>
+<title>Allyscan: my scans</title>
+<meta name="description" content="Every accessibility scan you have run on Allyscan, private to your account.">
 </head>
 <body>
-<div class="app-shell">
-    <div th:replace="~{fragments/shell :: sidebar(active='history')}"></div>
-    <div class="sidebar-backdrop"></div>
+<header th:replace="~{fragments/site :: nav(current='history')}"></header>
 
-    <div class="app-main">
-        <div th:replace="~{fragments/shell :: topbar}"></div>
-
-        <main class="app-main-inner">
-            <h1 class="page-heading">My scans</h1>
-            <p class="page-lede">Every scan you've submitted, private to your account.</p>
-
-            <div class="flash" role="status" th:if="${submittedId}">
-                Scan queued (id: <code th:text="${submittedId}">id</code>). It will appear below once a worker picks it up.
+<main id="top">
+  <div class="page">
+    <div class="wrap">
+      <div class="split-2">
+        <div class="page-head">
+          <h1>My scans</h1>
+          <p>Every scan you've submitted, private to your account.</p>
+        </div>
+        <div class="box stack">
+          <div class="notice" role="status" th:if="${submittedId}"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></svg><p>Scan queued. It appears below and updates by itself once a worker picks it up.</p></div>
+          <form class="form form--1" method="post" th:action="@{/account/scans}" aria-label="Start a new scan">
+            <div class="field field--full">
+              <label for="url">Website address</label>
+              <input type="url" id="url" name="url" placeholder="https://" required autocomplete="url" data-error="Write the full address, starting with https://">
             </div>
-
-            <form class="new-scan" method="post" th:action="@{/account/scans}" aria-label="Start a new scan">
-                <div>
-                    <label for="url">Website URL to scan</label>
-                    <input type="url" id="url" name="url" placeholder="https://example.com" required>
-                </div>
-                <button type="submit">Scan</button>
-            </form>
-
-            <section aria-label="Scan history">
-                <div th:replace="~{fragments/scan-history :: table(${jobs})}"></div>
-            </section>
-        </main>
+            <div class="btn-row"><button class="btn btn--primary" type="submit">Scan a website</button></div>
+            <p class="form__status" data-form-status></p>
+          </form>
+        </div>
+      </div>
+      <section class="block" aria-labelledby="history-h">
+        <h2 id="history-h">Scan history</h2>
+        <div th:replace="~{fragments/scan-history :: table(${jobs})}"></div>
+      </section>
     </div>
-</div>
-<script defer src="/shell.js"></script>
+  </div>
+</main>
+<footer th:replace="~{fragments/site :: foot}"></footer>
+<th:block th:replace="~{fragments/site :: scripts}"></th:block>
 <script defer src="/app.js"></script>
 </body>
 </html>

@@ -43,8 +43,7 @@
 }
 </style>
 <link rel="stylesheet" href="/assets/ui/base.css">
-<link rel="stylesheet" href="/assets/ui/window/fragment.css">
-<link rel="stylesheet" href="/assets/ui/doc/fragment.css">
+<link rel="stylesheet" href="/site.css">
 <link rel="stylesheet" href="/assets/diagrams/diagram.css">
 <script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
 <script src="/assets/backgrounds/backgrounds.js"></script>
@@ -90,72 +89,76 @@
         <p class="hero__lead">Paste one link. Allyscan crawls up to 20 pages and checks each against WCAG 2.0 AA, the standard Ontario's AODA requires.</p>
       </div>
 
-      <div class="ly-collage span-6 start-4" role="group" aria-label="Pieces of an Allyscan report: the pages a scan found, an image with no alt text, a contrast failure, the failed WCAG criteria and a scan moving through its queue">
+      <!-- the collage: pieces of the real report UI. With the curated example scan they carry its own numbers;
+           without one they show only what is true of every report (the WCAG names, the impact shapes, the cap). -->
+      <div class="ly-collage span-6 start-4" role="group" th:if="${exampleReport}"
+           th:attr="aria-label=${'Pieces of the example report for ' + exampleJob.rootUrl + ': the pages it found, its most serious violation, its totals and the WCAG criteria it fails'}">
         <div class="ly-collage__set is-on">
-          <div class="ly-piece pc-pages" style="left: 4%; top: 4%; width: 50%; height: 54%">
-            <p class="pc-k">Pages found <span>8 of 20</span></p>
-            <div class="pc-row"><code>/</code><span class="pc-n">4</span></div>
-            <div class="pc-row"><code>/book</code><span class="pc-n is-hot">9</span></div>
-            <div class="pc-row"><code>/fleet</code><span class="pc-n">3</span></div>
-            <div class="pc-row"><code>/about</code><span class="pc-n">2</span></div>
-            <div class="pc-row"><code>/contact</code><span class="pc-n">5</span></div>
-            <div class="pc-row"><code>/news</code><span class="pc-n">0</span></div>
-            <div class="pc-row"><code>/tickets</code><span class="pc-n">6</span></div>
-            <div class="pc-row"><code>/help</code><span class="pc-n">1</span></div>
+          <div class="ui ui-pc ly-piece pc-pages" style="left: 4%; top: 4%; width: 50%; height: 54%">
+            <p class="pc-k">Pages found <span th:text="${#lists.size(exampleReport.pages) + ' of 20'}">8 of 20</span></p>
+            <div class="pc-row" th:each="pr, st : ${exampleReport.pages}" th:if="${st.index < 7}"><code th:text="${pr.path()}">/</code><span class="pc-n" th:classappend="${st.first} ? 'is-hot' : ''" th:text="${#lists.size(pr.violations)}">4</span></div>
           </div>
-          <div class="ly-piece pc-issue" style="left: 40%; top: 62%; width: 56%; height: 34%">
-            <p class="pc-k"><span class="pc-imp pc-imp--crit">Critical</span><span class="pc-sc">1.1.1</span></p>
-            <p class="pc-t">Images must have alternative text</p>
-            <code class="pc-code">&lt;img src="rover.jpg"&gt;</code>
-            <p class="pc-m">image-alt · /fleet</p>
-          </div>
-          <div class="ly-piece pc-sum" style="left: 4%; top: 62%; width: 32%; height: 34%">
-            <p class="pc-k">This scan</p>
-            <p class="pc-big">30</p>
-            <p class="pc-m">issues on 8 pages</p>
-          </div>
-          <div class="ly-piece pc-contrast" style="left: 58%; top: 4%; width: 38%; height: 54%">
-            <div class="pc-sw" aria-hidden="true"><span class="pc-sw__a"></span><span class="pc-sw__b"></span></div>
-            <p class="pc-k"><span class="pc-sc">1.4.3</span> 2.9 : 1, needs 4.5 : 1</p>
-          </div>
-        </div>
-        <div class="ly-collage__set" aria-hidden="true">
-          <div class="ly-piece pc-crit" style="left: 4%; top: 4%; width: 62%; height: 52%">
-            <p class="pc-k">Failed criteria</p>
-            <div class="pc-row"><span class="pc-sc">1.1.1</span><span>Non-text content</span><span class="pc-n">6</span></div>
-            <div class="pc-row"><span class="pc-sc">1.3.1</span><span>Info and relationships</span><span class="pc-n">4</span></div>
-            <div class="pc-row"><span class="pc-sc">1.4.3</span><span>Contrast (minimum)</span><span class="pc-n">7</span></div>
-            <div class="pc-row"><span class="pc-sc">2.4.4</span><span>Link purpose</span><span class="pc-n">2</span></div>
-            <div class="pc-row"><span class="pc-sc">4.1.2</span><span>Name, role, value</span><span class="pc-n">4</span></div>
-          </div>
-          <div class="ly-piece pc-lvl" style="left: 70%; top: 4%; width: 26%; height: 52%">
-            <p class="pc-k">Level</p>
+          <div class="ui ui-pc ly-piece pc-lvl" style="left: 58%; top: 4%; width: 38%; height: 54%">
+            <p class="pc-k">Checked against</p>
             <p class="pc-big">AA</p>
             <p class="pc-m">WCAG 2.0</p>
           </div>
-          <div class="ly-piece pc-impacts" style="left: 44%; top: 60%; width: 52%; height: 36%">
-            <p class="pc-k">By impact</p>
-            <div class="pc-bars"><i style="--k:.55" data-l="Critical"></i><i style="--k:.9" data-l="Serious"></i><i style="--k:.35" data-l="Moderate"></i><i style="--k:.15" data-l="Minor"></i></div>
+          <div class="ui ui-pc ly-piece pc-sum" style="left: 4%; top: 62%; width: 32%; height: 34%">
+            <p class="pc-k">This scan</p>
+            <p class="pc-big" th:text="${exampleReport.totalViolations}">30</p>
+            <p class="pc-m" th:text="${'issues on ' + #lists.size(exampleReport.pages) + ' pages'}">issues on 8 pages</p>
+          </div>
+          <div class="ui ui-pc ly-piece pc-issue" style="left: 40%; top: 62%; width: 56%; height: 34%" th:with="w=${exampleReport.worst()}">
+            <th:block th:if="${w != null}">
+              <p class="pc-k"><span class="imp" th:classappend="${w.impact != null} ? 'imp--' + ${#strings.toLowerCase(w.impact)} : ''" th:text="${w.impact}">critical</span><span class="pc-sc" th:text="${#lists.isEmpty(w.successCriteria)} ? 'Best practice' : ${w.successCriteria[0].number}">1.1.1</span></p>
+              <p class="pc-t" th:text="${w.helpText}">Images must have alternative text</p>
+              <code class="pc-code" th:text="${w.target}">img</code>
+              <p class="pc-m" th:text="${w.ruleId}">image-alt</p>
+            </th:block>
+            <th:block th:if="${w == null}"><p class="pc-k">Most serious</p><p class="pc-t">No violations found</p></th:block>
           </div>
         </div>
         <div class="ly-collage__set" aria-hidden="true">
-          <div class="ly-piece pc-queue" style="left: 4%; top: 4%; width: 48%; height: 46%">
-            <p class="pc-k">Scan job</p>
-            <div class="pc-step is-done"><span></span>Queued</div>
-            <div class="pc-step is-done"><span></span>Crawled 8 pages</div>
-            <div class="pc-step is-on"><span></span>Scanning /contact</div>
-            <div class="pc-step"><span></span>Report</div>
+          <div class="ui ui-pc ly-piece pc-crit" style="left: 4%; top: 4%; width: 62%; height: 52%">
+            <p class="pc-k">Failed criteria</p>
+            <div class="pc-row" th:each="cs, st : ${exampleReport.criteria}" th:if="${st.index < 5}"><span class="pc-sc" th:text="${cs.criterion.number}">1.1.1</span><span th:text="${cs.criterion.name}">Non-text content</span><span class="pc-n" th:text="${cs.count}">6</span></div>
           </div>
-          <div class="ly-piece pc-issue" style="left: 56%; top: 4%; width: 40%; height: 46%">
-            <p class="pc-k"><span class="pc-imp pc-imp--crit">Critical</span><span class="pc-sc">4.1.2</span></p>
-            <p class="pc-t">Form elements must have labels</p>
-            <code class="pc-code">&lt;input id="from0"&gt;</code>
-            <p class="pc-m">label · /book</p>
+          <div class="ui ui-pc ly-piece pc-lvl" style="left: 70%; top: 4%; width: 26%; height: 52%">
+            <p class="pc-k">Criteria</p>
+            <p class="pc-big" th:text="${#lists.size(exampleReport.criteria)}">7</p>
+            <p class="pc-m">failed</p>
           </div>
-          <div class="ly-piece pc-focus" style="left: 4%; top: 54%; width: 92%; height: 42%">
-            <p class="pc-k"><span class="pc-imp pc-imp--ser">Serious</span><span class="pc-sc">2.4.4</span></p>
-            <p class="pc-t">Links must have discernible text</p>
-            <p class="pc-m">link-name · 2 links on /</p>
+          <div class="ui ui-pc ly-piece pc-impacts" style="left: 44%; top: 60%; width: 52%; height: 36%">
+            <p class="pc-k">By impact</p>
+            <div class="pc-irow"><span class="imp imp--critical">Critical</span><span class="pc-n" th:text="${exampleReport.count('critical')}">0</span></div>
+            <div class="pc-irow"><span class="imp imp--serious">Serious</span><span class="pc-n" th:text="${exampleReport.count('serious')}">0</span></div>
+            <div class="pc-irow"><span class="imp imp--moderate">Moderate</span><span class="pc-n" th:text="${exampleReport.count('moderate')}">0</span></div>
+            <div class="pc-irow"><span class="imp imp--minor">Minor</span><span class="pc-n" th:text="${exampleReport.count('minor')}">0</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ly-collage span-6 start-4" role="group" th:unless="${exampleReport}" aria-label="Pieces of an Allyscan report: the WCAG criteria it checks, its impact levels and its 20-page crawl">
+        <div class="ly-collage__set is-on">
+          <div class="ui ui-pc ly-piece pc-crit" style="left: 4%; top: 4%; width: 62%; height: 52%">
+            <p class="pc-k">Some of the criteria it checks</p>
+            <div class="pc-row pc-row--2"><span class="pc-sc">1.1.1</span><span>Non-text content</span></div>
+            <div class="pc-row pc-row--2"><span class="pc-sc">1.3.1</span><span>Info and relationships</span></div>
+            <div class="pc-row pc-row--2"><span class="pc-sc">1.4.3</span><span>Contrast (minimum)</span></div>
+            <div class="pc-row pc-row--2"><span class="pc-sc">2.4.4</span><span>Link purpose (in context)</span></div>
+            <div class="pc-row pc-row--2"><span class="pc-sc">4.1.2</span><span>Name, role, value</span></div>
+          </div>
+          <div class="ui ui-pc ly-piece pc-lvl" style="left: 70%; top: 4%; width: 26%; height: 52%">
+            <p class="pc-k">Level</p><p class="pc-big">AA</p><p class="pc-m">WCAG 2.0</p>
+          </div>
+          <div class="ui ui-pc ly-piece pc-sum" style="left: 4%; top: 60%; width: 36%; height: 36%">
+            <p class="pc-k">Crawl</p><p class="pc-big">20</p><p class="pc-m">pages at most</p>
+          </div>
+          <div class="ui ui-pc ly-piece pc-impacts" style="left: 44%; top: 60%; width: 52%; height: 36%">
+            <p class="pc-k">Impact levels</p>
+            <div class="pc-irow"><span class="imp imp--critical">Critical</span></div>
+            <div class="pc-irow"><span class="imp imp--serious">Serious</span></div>
+            <div class="pc-irow"><span class="imp imp--moderate">Moderate</span></div>
+            <div class="pc-irow"><span class="imp imp--minor">Minor</span></div>
           </div>
         </div>
       </div>
@@ -193,65 +196,18 @@
       <div class="grid">
         <h2 id="report-h" class="span-5">One report for every page of your website</h2>
         <div class="span-6 start-7 report-intro">
-          <p>The list shows each page the crawler found. Open one and its failing elements are marked in place, with the WCAG criterion and how serious each one is.</p>
+          <p>The list shows each page the crawler found. Pick one to see its violations, most serious first, with the WCAG criterion each fails and the element it was found on.</p>
           <a class="link" th:if="${exampleJob}" th:href="@{'/scans/' + ${exampleJob.id} + '/report'}">See an example report</a>
           <a class="link" th:unless="${exampleJob}" href="#crawl">See how a scan runs</a>
         </div>
       </div>
-      <div class="ui app fill" role="img" aria-label="An Allyscan report: six pages in a list with their status, and the booking page open with its unlabelled field, low-contrast fares and image without alt text marked" data-ui-pause-host>
-        <div class="app__pane app__pane--list">
-          <div class="ui ui-panel ui-win" data-ui="window" data-open="Queued" data-work="Scanning" data-done="Scanned">
-            <div class="ui-win__bar">
-              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-              <span class="ui-win__crumb">Allyscan <i>/</i> <b>Pages</b></span>
-              <span class="ui-spacer"></span>
-              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">Filter</span><span class="ui-kbd">/</span></span>
-            </div>
-            <div class="ui-win__body">
-              <nav class="ui-win__side" aria-hidden="true">
-                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M3.5 2.5h6l3 3v8h-9z"/><path d="M9.5 2.5v3h3"/></svg>Pages<em>11</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M8 2.5 14 13H2z"/><path d="M8 6.5v3"/></svg>Critical<em>8</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10"/></svg>Serious<em>14</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/></svg>Moderate<em>6</em></span>
-                <span class="ui-win__label">Criteria</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>1.1.1</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>1.4.3</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>4.1.2</span>
-              </nav>
-              <div class="ui-win__main">
-                <div class="ui-win__cols" aria-hidden="true"><span>Page</span><span>Title</span><span>Status</span><span>Issues</span></div>
-                <ul class="ui-win__rows">
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">/</span><span class="ui-win__who">/</span><span class="ui-win__sub">Home</span><span class="ui-win__st is-done" data-st>Scanned</span><span class="ui-win__age">4</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">B</span><span class="ui-win__who">/book</span><span class="ui-win__sub">Book a trip</span><span class="ui-win__st is-done" data-st>Scanned</span><span class="ui-win__age">9</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">F</span><span class="ui-win__who">/fleet</span><span class="ui-win__sub">Our fleet</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">3</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">A</span><span class="ui-win__who">/about</span><span class="ui-win__sub">About the line</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">2</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">C</span><span class="ui-win__who">/contact</span><span class="ui-win__sub">Contact form</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">5</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">N</span><span class="ui-win__who">/news</span><span class="ui-win__sub">News</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">0</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">T</span><span class="ui-win__who">/tickets</span><span class="ui-win__sub">Tickets and fares</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">6</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">H</span><span class="ui-win__who">/help</span><span class="ui-win__sub">Help centre</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">1</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">S</span><span class="ui-win__who">/stations</span><span class="ui-win__sub">Stations</span><span class="ui-win__st" data-st>Queued</span><span class="ui-win__age">3</span></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="app__pane app__pane--open" data-ui-loop>
-          <div class="ui ui-doc" data-ui="doc">
-            <article class="ui-doc__page">
-              <div class="ui-doc__label">/book · 9 issues · scanned in Chromium</div>
-              <div class="ui-doc__title">Book a trip</div>
-              <div class="ui-doc__text">Choose where you leave from: <mark class="ui-doc__mark is-on">departure</mark>, then the date and the number of passengers.</div>
-              <div class="ui-doc__text">Each fare shows its price <mark class="ui-doc__mark" data-kind="1.4.3 · Serious" data-msg="Grey text on white measures 2.9 : 1; body text needs 4.5 : 1." data-where="color-contrast · .fare small">in grey under the name</mark>, with taxes included.</div>
-              <div class="ui-doc__text">A photo of the departure hall sits beside the form: <mark class="ui-doc__mark" data-kind="1.1.1 · Critical" data-msg="This image has no alt text, so a screen reader skips it or reads the file name." data-where="image-alt · #hero img">hall.jpg</mark></div>
-              <div class="ui-doc__text">Pay by card or with a saved account. You can change a booking until the day before you travel.</div>
-              <div class="ui-doc__text">Questions about a booking go to the help centre, open every day.</div>
-            </article>
-            <div class="ui-doc__note ui-panel is-on" aria-live="polite">
-              <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind>4.1.2 · Critical</span></div>
-              <div class="ui-doc__msg" data-doc-msg>This field has no label, so a screen reader announces only “edit text”.</div>
-              <div class="ui-doc__where" data-doc-where>label · input#from0</div>
-            </div>
-          </div>
+      <!-- the real report window, rendered from the curated example scan's own data (no mock-up) -->
+      <div class="fill report-frame" th:if="${exampleReport}">
+        <div th:replace="~{fragments/report-window :: window(report=${exampleReport}, prefix='ex', demo=true, crumb=${exampleJob.rootUrl})}"></div>
+      </div>
+      <div class="fill report-frame report-frame--empty" th:unless="${exampleReport}">
+        <div class="rw rw--demo"><div class="rw__bar"><span class="rw__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="rw__crumb">Allyscan / <b>Report</b></span></div>
+          <div class="rw__open"><div class="rw__panel"><p class="rw__h">Your report shows up here</p><p class="rw__empty">Scan a website and its pages appear in this window, each with its violations, the WCAG criteria they fail and a link to the fix.</p><a class="btn btn--primary" href="#scan">Scan a website</a></div></div>
         </div>
       </div>
     </div>
@@ -280,14 +236,17 @@
             <h3>Files each issue under its WCAG number, like 1.4.3</h3>
             <p>Each finding carries the success criterion it fails, from 1.1.1 to 4.1.2, with its name and level.</p>
             <div class="panel"><div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:440px;--ax:max(24px, 50% - 220px);--ay:40px">
-              <div class="ui ui-panel rp-crit">
+              <div class="ui ui-panel rp-crit" th:if="${exampleReport}">
                 <div class="rp-head"><span>Criterion</span><span>Name</span><span>Level</span><span>Issues</span></div>
-                <div class="rp-row"><span class="pc-sc">1.1.1</span><span>Non-text content</span><span>A</span><span>6</span></div>
-                <div class="rp-row"><span class="pc-sc">1.3.1</span><span>Info and relationships</span><span>A</span><span>4</span></div>
-                <div class="rp-row"><span class="pc-sc">1.4.3</span><span>Contrast (minimum)</span><span>AA</span><span>7</span></div>
-                <div class="rp-row"><span class="pc-sc">2.4.4</span><span>Link purpose</span><span>A</span><span>2</span></div>
-                <div class="rp-row"><span class="pc-sc">4.1.2</span><span>Name, role, value</span><span>A</span><span>4</span></div>
+                <div class="rp-row" th:each="cs, st : ${exampleReport.criteria}" th:if="${st.index < 5}"><span class="pc-sc" th:text="${cs.criterion.number}">1.1.1</span><span th:text="${cs.criterion.name}">Non-text content</span><span th:text="${cs.criterion.level}">A</span><span th:text="${cs.count}">6</span></div>
               </div>
+              <div class="ui ui-panel rp-crit rp-crit--3" th:unless="${exampleReport}">
+                <div class="rp-head"><span>Criterion</span><span>Name</span><span>Level</span></div>
+                <div class="rp-row"><span class="pc-sc">1.1.1</span><span>Non-text Content</span><span>A</span></div>
+                <div class="rp-row"><span class="pc-sc">1.3.1</span><span>Info and Relationships</span><span>A</span></div>
+                <div class="rp-row"><span class="pc-sc">1.4.3</span><span>Contrast (Minimum)</span><span>AA</span></div>
+                <div class="rp-row"><span class="pc-sc">2.4.4</span><span>Link Purpose (In Context)</span><span>A</span></div>
+                <div class="rp-row"><span class="pc-sc">4.1.2</span><span>Name, Role, Value</span><span>A</span></div>
             </div></div></div>
           </article>
           <article class="card card--row card--open span-6">
@@ -295,10 +254,10 @@
             <p>Critical, serious, moderate and minor, each with its own shape, so colour is never the only cue.</p>
             <div class="panel"><div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:400px;--ax:max(24px, 50% - 200px);--ay:40px">
               <div class="ui ui-panel rp-imp">
-                <div class="rp-irow"><span class="pc-imp pc-imp--crit">Critical</span><span>Form elements must have labels</span></div>
-                <div class="rp-irow"><span class="pc-imp pc-imp--ser">Serious</span><span>Elements must meet minimum contrast</span></div>
-                <div class="rp-irow"><span class="pc-imp pc-imp--mod">Moderate</span><span>Heading levels increase by one</span></div>
-                <div class="rp-irow"><span class="pc-imp pc-imp--min">Minor</span><span>id attribute values are unique</span></div>
+                <div class="rp-irow"><span class="imp imp--critical">Critical</span><span>Form elements must have labels</span></div>
+                <div class="rp-irow"><span class="imp imp--serious">Serious</span><span>Elements must meet minimum color contrast</span></div>
+                <div class="rp-irow"><span class="imp imp--moderate">Moderate</span><span>Heading levels should only increase by one</span></div>
+                <div class="rp-irow"><span class="imp imp--minor">Minor</span><span>id attribute value must be unique</span></div>
               </div>
             </div></div></div>
           </article>
@@ -309,11 +268,11 @@
           <h3>Filters website issues by category</h3>
           <p>One click narrows a report to forms, colour and contrast, keyboard or ARIA, across every page.</p>
           <div class="panel"><div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:440px;--ax:max(24px, 50% - 220px);--ay:40px">
-            <div class="ui ui-panel rp-chips">
-              <span class="rp-chip is-on">Forms <em>4</em></span><span class="rp-chip">Color &amp; contrast <em>7</em></span><span class="rp-chip">Keyboard <em>2</em></span><span class="rp-chip">ARIA <em>3</em></span><span class="rp-chip">Text alternatives <em>6</em></span><span class="rp-chip">Structure <em>1</em></span>
-              <div class="rp-irow"><span class="pc-imp pc-imp--crit">Critical</span><span>label · input#from0 · /book</span></div>
-              <div class="rp-irow"><span class="pc-imp pc-imp--crit">Critical</span><span>select-name · #passengers · /book</span></div>
+            <div class="ui ui-panel rp-chips" th:if="${exampleReport}">
+              <span class="rp-chip" th:each="c, st : ${exampleReport.categories}" th:if="${st.index < 6}" th:classappend="${st.first} ? 'is-on' : ''"><th:block th:text="${c.label}">Forms</th:block> <em th:text="${c.count}">4</em></span>
             </div>
+            <div class="ui ui-panel rp-chips" th:unless="${exampleReport}">
+              <span class="rp-chip is-on">Forms</span><span class="rp-chip">Color &amp; Contrast</span><span class="rp-chip">Keyboard</span><span class="rp-chip">ARIA</span><span class="rp-chip">Text Alternatives</span><span class="rp-chip">Structure &amp; Navigation</span></div>
           </div></div></div>
         </article>
         <article class="card card--row card--open span-6">
@@ -402,5 +361,6 @@
 <script type="module" src="/assets/motion/motion.js"></script>
 <script type="module" src="/assets/layout/layout.js"></script>
 <script type="module" src="/assets/diagrams/mount.js"></script>
+<script defer src="/report-window.js"></script>
 </body>
 </html>
