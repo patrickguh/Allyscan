@@ -1,8 +1,5 @@
 package ca.allyscan.audit;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,9 +18,6 @@ import java.util.stream.Collectors;
 
 @Controller
 public class ScanViewController {
-
-    private static final Parser MARKDOWN_PARSER = Parser.builder().build();
-    private static final HtmlRenderer MARKDOWN_RENDERER = HtmlRenderer.builder().escapeHtml(true).build();
 
     private final ScanService scanService;
     private final ScanJobRepository scanJobRepository;
@@ -134,10 +128,6 @@ public class ScanViewController {
         model.addAttribute("categorySummaries", categorySummaries);
         model.addAttribute("criterionSummaries", criterionSummaries);
         model.addAttribute("bestPracticeCount", bestPracticeCount);
-        if (job.getInterpretation() != null) {
-            Node document = MARKDOWN_PARSER.parse(job.getInterpretation());
-            model.addAttribute("interpretationHtml", MARKDOWN_RENDERER.render(document));
-        }
         return "scan-detail";
     }
 }

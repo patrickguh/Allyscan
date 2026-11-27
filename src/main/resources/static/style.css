@@ -1232,56 +1232,12 @@ td.num {
     color: var(--muted);
 }
 
-.interpretation {
+.scan-error {
     max-width: 42em;
-    background: var(--panel);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-}
-
-.interpretation > :first-child { margin-top: 0; }
-.interpretation > :last-child  { margin-bottom: 0; }
-
-.interpretation h1,
-.interpretation h2,
-.interpretation h3 {
-    font-size: 1.05rem;
-    margin: 1.25rem 0 0.4rem;
-}
-
-.interpretation ol,
-.interpretation ul {
-    padding-left: 1.4rem;
-}
-
-.interpretation li {
-    margin: 0.3rem 0;
-}
-
-.interpretation pre {
-    background: var(--page);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    padding: 0.75rem;
-    overflow-x: auto;
-}
-
-.interpretation pre code {
-    border: none;
-    padding: 0;
-    background: none;
-}
-
-.interpretation hr {
-    border: none;
-    border-top: 1px solid var(--rule);
-    margin: 1rem 0;
-}
-
-.interpretation-failed {
     background: var(--critical-soft);
-    border-color: var(--critical);
+    border: 1px solid var(--critical);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
     color: var(--ink);
 }
 

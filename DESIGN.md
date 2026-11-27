@@ -109,7 +109,7 @@ Strategy: **restrained, with a committed shell.** The ink sidebar is a solid fie
 - **Signal** (`#1747c8` light / `#8cb0ff` dark): links, primary buttons, focus ring, text selection, the RUNNING status. White on it is 7.6:1; ink `#0d1220` on the dark version is 8.7:1.
 
 ### Neutral
-- **Ink / Page / Panel / Rule**: text, ground, quiet fills (quotes, table headers, summary box) and hairlines. Muted text is 7.5:1 on page.
+- **Ink / Page / Panel / Rule**: text, ground, quiet fills (quotes, table headers) and hairlines. Muted text is 7.5:1 on page.
 - **Rail** (`#16181d` / `#0a0b0d`): the sidebar and mobile top bar. Its focus ring uses the light signal `#8cb0ff`.
 
 ### Impact and status

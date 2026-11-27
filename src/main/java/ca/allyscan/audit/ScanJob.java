@@ -33,9 +33,6 @@ public class ScanJob {
     @Column(nullable = false)
     private int attempts = 0;
 
-    @Column(columnDefinition = "text")
-    private String interpretation;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
@@ -91,12 +88,6 @@ public class ScanJob {
     public OffsetDateTime getFinishedAt() { return finishedAt; }
     public String getErrorMessage() { return errorMessage; }
     public int getAttempts() { return attempts; }
-    public String getInterpretation() { return interpretation; }
-
-    public void setInterpretation(String interpretation) {
-        this.interpretation = interpretation;
-    }
-
     public void setRootUrl(String rootUrl) {
         this.rootUrl = rootUrl;
     }

@@ -14,7 +14,7 @@ Secondary: anyone who wants to know whether a website meets AODA / WCAG 2.0 AA, 
 
 ## Product Purpose
 
-Allyscan is an automated web accessibility auditor. You submit a URL; it crawls same-host pages (BFS, capped at 20), runs an axe-core scan in headless Chromium on each one, stores every violation by page, category and impact, and adds a plain-language AI summary (Claude API) of the most important issues.
+Allyscan is an automated web accessibility auditor. You submit a URL; it crawls same-host pages (BFS, capped at 20), runs an axe-core scan in headless Chromium on each one, and stores every violation by page, category, impact and WCAG success criterion.
 
 Success: a visitor understands what it does within seconds, runs a scan, and leaves with a report that is easy to act on. For the portfolio audience, success also means the product itself reads as careful, credible engineering.
 

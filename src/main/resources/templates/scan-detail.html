@@ -48,18 +48,9 @@
             under the AODA.
         </p>
 
-        <p th:if="${job.status.name() == 'FAILED'}" class="interpretation interpretation-failed">
+        <p th:if="${job.status.name() == 'FAILED'}" class="scan-error">
             Scan failed: <span th:text="${job.errorMessage}">error</span>
         </p>
-    </section>
-
-    <section class="report-section" aria-labelledby="interpretation-heading" th:if="${job.interpretation != null}">
-        <h2 id="interpretation-heading">Summary</h2>
-        <div class="interpretation" th:utext="${interpretationHtml}">AI-generated summary appears here.</div>
-    </section>
-    <section class="report-section" aria-labelledby="interpretation-heading" th:if="${job.status.name() == 'DONE' and job.interpretation == null}">
-        <h2 id="interpretation-heading">Summary</h2>
-        <p class="empty-state">No AI summary is available for this scan.</p>
     </section>
 
     <section class="report-section" aria-labelledby="criteria-heading" th:if="${!#lists.isEmpty(criterionSummaries) or bestPracticeCount > 0}">
