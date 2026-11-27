@@ -54,8 +54,17 @@ public class ScanService {
         });
     }
 
+    /**
+     * Finds the pages to scan. Never returns an empty list: an unreachable root URL throws
+     * {@link SiteUnreachableException}, and any other empty crawl throws too, so a job
+     * cannot finish as DONE having scanned nothing.
+     */
     public List<String> discoverPages(String rootUrl) {
-        return siteCrawler.discover(rootUrl);
+        List<String> pages = siteCrawler.discover(rootUrl);
+        if (pages.isEmpty()) {
+            throw new IllegalStateException("No pages could be found to scan at " + rootUrl + ".");
+        }
+        return pages;
     }
 
     public PageScanResult runAxeOn(String url) {          // was private

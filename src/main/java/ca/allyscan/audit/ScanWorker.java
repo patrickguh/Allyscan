@@ -29,8 +29,11 @@ public class ScanWorker {
                 }
                 scanService.markDone(job.getId());
             } catch (Exception e) {
-                log.warn("Scan job {} failed: {}", job.getId(), e.getMessage());
-                scanService.recordFailure(job.getId(), e.getMessage());
+                String message = e.getMessage() != null
+                        ? e.getMessage()
+                        : "An unexpected error occurred (" + e.getClass().getSimpleName() + ").";
+                log.warn("Scan job {} failed: {}", job.getId(), message);
+                scanService.recordFailure(job.getId(), message);
             }
         });
     }
