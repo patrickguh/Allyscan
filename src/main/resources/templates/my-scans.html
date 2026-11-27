@@ -6,7 +6,7 @@
     <title>Allyscan &mdash; My Scans</title>
     <link rel="stylesheet" href="/style.css">
     <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235b4bf0'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231747c8'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
 <div class="app-shell">
@@ -16,7 +16,10 @@
     <div class="app-main">
         <div th:replace="~{fragments/shell :: topbar}"></div>
 
-        <div class="app-main-inner" style="padding-top:2rem;">
+        <main class="app-main-inner">
+            <h1 class="page-heading">My scans</h1>
+            <p class="page-lede">Every scan you've submitted, private to your account.</p>
+
             <div class="flash" role="status" th:if="${submittedId}">
                 Scan queued (id: <code th:text="${submittedId}">id</code>). It will appear below once a worker picks it up.
             </div>
@@ -29,12 +32,10 @@
                 <button type="submit">Scan</button>
             </form>
 
-            <section aria-labelledby="my-scans-heading">
-                <h2 id="my-scans-heading">My scans</h2>
-                <p class="tagline">Every scan you've submitted, private to your account.</p>
+            <section aria-label="Scan history">
                 <div th:replace="~{fragments/scan-history :: table(${jobs})}"></div>
             </section>
-        </div>
+        </main>
     </div>
 </div>
 <script defer src="/shell.js"></script>

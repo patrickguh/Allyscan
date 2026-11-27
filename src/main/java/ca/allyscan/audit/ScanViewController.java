@@ -55,6 +55,8 @@ public class ScanViewController {
 
     public record CategorySummary(String slug, String label, long count) { }
 
+    public record CriterionSummary(WcagCriterion criterion, long count) { }
+
     @GetMapping("/")
     public String home(Authentication authentication, Model model) {
         scanJobRepository.findFirstByIsExampleTrue().ifPresent(job -> model.addAttribute("exampleJob", job));
@@ -112,10 +114,26 @@ public class ScanViewController {
                 .sorted(Comparator.comparingLong(CategorySummary::count).reversed())
                 .toList();
 
+        List<CriterionSummary> criterionSummaries = pageReports.stream()
+                .flatMap(pr -> pr.violations().stream())
+                .flatMap(v -> v.getSuccessCriteria().stream())
+                .collect(Collectors.groupingBy(c -> c, Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new CriterionSummary(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparing(CriterionSummary::criterion, WcagCriterion.SPEC_ORDER))
+                .toList();
+
+        long bestPracticeCount = pageReports.stream()
+                .flatMap(pr -> pr.violations().stream())
+                .filter(v -> v.getSuccessCriteria().isEmpty())
+                .count();
+
         model.addAttribute("job", job);
         model.addAttribute("pageReports", pageReports);
         model.addAttribute("totalViolations", totalViolations);
         model.addAttribute("categorySummaries", categorySummaries);
+        model.addAttribute("criterionSummaries", criterionSummaries);
+        model.addAttribute("bestPracticeCount", bestPracticeCount);
         if (job.getInterpretation() != null) {
             Node document = MARKDOWN_PARSER.parse(job.getInterpretation());
             model.addAttribute("interpretationHtml", MARKDOWN_RENDERER.render(document));

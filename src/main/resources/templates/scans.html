@@ -6,7 +6,7 @@
     <title>Allyscan &mdash; Accessibility Scans</title>
     <link rel="stylesheet" href="/style.css">
     <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235b4bf0'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231747c8'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
 <div class="app-shell">
@@ -16,39 +16,33 @@
     <div class="app-main">
         <div th:replace="~{fragments/shell :: topbar}"></div>
 
-        <div class="app-main-inner">
+        <main class="app-main-inner">
             <section class="prompt-hero" aria-labelledby="prompt-heading">
-                <p class="eyebrow">Allyscan</p>
                 <h1 id="prompt-heading" class="prompt-heading">What website should we check?</h1>
                 <p class="prompt-sub">Free, automated AODA / WCAG 2.0 AA accessibility scans, right in your browser.</p>
 
                 <form class="prompt-form" method="post" th:action="@{/account/scans}" aria-label="Scan a website" sec:authorize="isAuthenticated()">
-                    <input type="url" name="url" placeholder="https://example.com" required autofocus>
-                    <button type="submit" aria-label="Scan">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                    <input type="url" name="url" placeholder="https://example.com" required autofocus aria-label="Website URL">
+                    <button type="submit">
+                        Scan
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                     </button>
                 </form>
                 <form class="prompt-form" method="post" th:action="@{/guest-scan}" aria-label="Scan a website" sec:authorize="isAnonymous()">
-                    <input type="url" name="url" placeholder="https://example.com" required autofocus>
-                    <button type="submit" aria-label="Scan">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                    <input type="url" name="url" placeholder="https://example.com" required autofocus aria-label="Website URL">
+                    <button type="submit">
+                        Scan
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                     </button>
                 </form>
 
-                <div class="badge-row" aria-hidden="true">
-                    <span class="chip">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
-                        WCAG 2.0 AA
-                    </span>
-                    <span class="chip">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0zM5 7h14M8 21h8"/></svg>
-                        AODA-based checks
-                    </span>
-                    <span class="chip">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
-                        Real browser scans
-                    </span>
-                </div>
+                <p class="principles-lead">Every scan checks against WCAG 2.0 Level AA, which is organized under four principles:</p>
+                <ol class="principles">
+                    <li class="principle"><span class="principle-num" aria-hidden="true">1</span><span class="principle-name">Perceivable</span><span class="principle-desc">Content can be seen or heard, including with assistive tech.</span></li>
+                    <li class="principle"><span class="principle-num" aria-hidden="true">2</span><span class="principle-name">Operable</span><span class="principle-desc">Everything works from a keyboard, with time to act.</span></li>
+                    <li class="principle"><span class="principle-num" aria-hidden="true">3</span><span class="principle-name">Understandable</span><span class="principle-desc">Text, labels and errors make sense.</span></li>
+                    <li class="principle"><span class="principle-num" aria-hidden="true">4</span><span class="principle-name">Robust</span><span class="principle-desc">Markup that browsers and screen readers can parse.</span></li>
+                </ol>
 
                 <a href="#below-fold" class="scroll-hint">
                     See how it works
@@ -57,20 +51,15 @@
             </section>
 
             <div id="below-fold">
-                <section aria-labelledby="scan-history-heading" sec:authorize="isAuthenticated()" style="margin-bottom:2rem;">
+                <section class="doc-section" aria-labelledby="scan-history-heading" sec:authorize="isAuthenticated()">
                     <h2 id="scan-history-heading">Your scan history</h2>
                     <div th:replace="~{fragments/scan-history :: table(${jobs})}"></div>
                 </section>
 
-                <section class="law-card tilt-a" aria-labelledby="example-heading" th:if="${exampleJob}">
-                <div class="law-card-float">
-                <div class="law-card-surface">
-                <div class="law-card-grid">
-                    <p class="eyebrow">See it in action</p>
-                    <div class="law-card-content">
+                <section class="doc-section" aria-labelledby="example-heading" th:if="${exampleJob}">
                         <h2 id="example-heading">Example report: Deque University's Mars demo</h2>
                         <p>That's a real, deliberately-broken accessibility test site &mdash; built specifically to be scanned.
-                            Here's exactly what a Allyscan report looks like against it: violations by page, categorized by
+                            Here's exactly what an Allyscan report looks like against it: violations by page, categorized by
                             type, with an AI-generated summary.</p>
                         <div class="law-links">
                             <a th:href="@{'/scans/' + ${exampleJob.id} + '/report'}">
@@ -78,18 +67,9 @@
                                 View the example report
                             </a>
                         </div>
-                    </div>
-                </div>
-                </div>
-                </div>
                 </section>
 
-                <section class="law-card tilt-b" aria-labelledby="law-heading">
-                <div class="law-card-float">
-                <div class="law-card-surface">
-                <div class="law-card-grid">
-                    <p class="eyebrow">The regulation</p>
-                    <div class="law-card-content">
+                <section class="doc-section" aria-labelledby="law-heading">
                         <h2 id="law-heading">Ontario Regulation 191/11 &mdash; Integrated Accessibility Standards</h2>
                         <p>Under the <em>Accessibility for Ontarians with Disabilities Act, 2005</em>, Section 14 of O. Reg. 191/11
                             sets the legal bar for websites:</p>
@@ -132,18 +112,9 @@
 
                         <p class="law-disclaimer">This is a plain-language summary for context, not legal advice &mdash; always
                             confirm current obligations against the official regulation.</p>
-                    </div>
-                </div>
-                </div>
-                </div>
                 </section>
 
-                <section class="law-card tilt-c" aria-labelledby="cta-heading" sec:authorize="isAnonymous()">
-                <div class="law-card-float">
-                <div class="law-card-surface">
-                <div class="law-card-grid">
-                    <p class="eyebrow">Get started</p>
-                    <div class="law-card-content">
+                <section class="doc-section" aria-labelledby="cta-heading" sec:authorize="isAnonymous()">
                         <h2 id="cta-heading">Want a permanent, private history?</h2>
                         <p>Anonymous scans are shown once and aren't saved. Create a free account to keep every
                             report, privately, for as long as you want.</p>
@@ -151,13 +122,9 @@
                             <a href="/login">Log in</a>
                             <a href="/register" class="cta-primary">Sign up free</a>
                         </div>
-                    </div>
-                </div>
-                </div>
-                </div>
                 </section>
             </div>
-        </div>
+        </main>
     </div>
 </div>
 <script defer src="/shell.js"></script>

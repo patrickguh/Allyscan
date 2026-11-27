@@ -6,7 +6,7 @@
     <title>Allyscan &mdash; Settings</title>
     <link rel="stylesheet" href="/style.css">
     <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235b4bf0'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231747c8'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
 <div class="app-shell">
@@ -16,8 +16,8 @@
     <div class="app-main">
         <div th:replace="~{fragments/shell :: topbar}"></div>
 
-        <div class="app-main-inner" style="padding-top:2rem; max-width:36rem;">
-            <h2 style="margin-bottom:1.25rem;">Settings</h2>
+        <main class="app-main-inner" style="max-width:40rem;">
+            <h1 class="page-heading" style="margin-bottom:1.5rem;">Settings</h1>
 
             <section class="auth-card" style="margin:0;">
                 <div aria-labelledby="theme-heading">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
             </section>
-        </div>
+        </main>
     </div>
 </div>
 <script defer src="/shell.js"></script>

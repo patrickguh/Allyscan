@@ -6,7 +6,7 @@
     <title th:text="'Allyscan &mdash; Report for ' + ${job.rootUrl}">Allyscan &mdash; Report</title>
     <link rel="stylesheet" href="/style.css">
     <script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'||t==='system'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235b4bf0'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231747c8'/%3E%3Cpath d='M4 17h4l3-8h6l3 8' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
 <div class="app-shell">
@@ -16,52 +16,84 @@
     <div class="app-main">
         <div th:replace="~{fragments/shell :: topbar}"></div>
 
-        <div class="app-main-inner" style="padding-top:2rem;">
-    <section aria-labelledby="report-heading">
-        <h2 id="report-heading">
-            Report for <span th:text="${job.rootUrl}">https://example.com</span>
-        </h2>
+        <main class="app-main-inner">
+    <section class="report-head" aria-labelledby="report-heading">
+        <h1 id="report-heading" class="report-title">
+            Report for <span class="report-url" th:text="${job.rootUrl}">https://example.com</span>
+        </h1>
         <p th:if="${job.example}">
             <span class="status status-DONE">Example report</span>
-            &mdash; this is a public demo scan anyone can view, kept here to show how Allyscan works.
+            This is a public demo scan anyone can view, kept here to show how Allyscan works.
         </p>
         <div class="flash" role="status" th:if="${job.status.name() == 'QUEUED' or job.status.name() == 'RUNNING'}">
-            Your scan is still <span th:text="${#strings.toLowerCase(job.status.name())}">running</span> &mdash;
-            <a th:href="@{'/scans/' + ${job.id} + '/report'}">refresh to check again</a>.
-            <span th:if="${job.anonymous}">This scan isn't tied to an account, so keep this link handy until it finishes &mdash; it can only be viewed once.</span>
+            Your scan is still <span th:text="${#strings.toLowerCase(job.status.name())}">running</span>.
+            <a th:href="@{'/scans/' + ${job.id} + '/report'}">Refresh to check again</a>.
+            <span th:if="${job.anonymous}">This scan isn't tied to an account, so keep this link handy until it finishes. It can only be viewed once.</span>
         </div>
         <div class="flash" role="status"
              th:if="${job.anonymous and (job.status.name() == 'DONE' or job.status.name() == 'FAILED')}">
-            This is a one-time view &mdash; since no account is logged in, this report won't be here if you
+            This is a one-time view. Since no account is logged in, this report won't be here if you
             refresh or come back later. <a href="/register">Sign up</a> to keep a permanent history instead.
         </div>
-        <p>
-            Status: <span class="status" th:classappend="'status-' + ${job.status}" th:text="${job.status}">DONE</span>
-            &middot; <span th:text="${#lists.size(pageReports)}">0</span> page(s) scanned
-            &middot; <span th:text="${totalViolations}">0</span> violation(s) found
-        </p>
+        <ul class="report-meta">
+            <li>Status <span class="status" th:classappend="'status-' + ${job.status}" th:text="${job.status}">DONE</span></li>
+            <li><strong th:text="${#lists.size(pageReports)}">0</strong> page(s) scanned</li>
+            <li><strong th:text="${totalViolations}">0</strong> violation(s) found</li>
+            <li><strong th:text="${#lists.size(criterionSummaries)}">0</strong> WCAG criteria failed</li>
+        </ul>
         <p class="law-note">Checked against
-            <a href="https://www.w3.org/WAI/WCAG2AA-Conformance" target="_blank" rel="noopener noreferrer">WCAG 2.0 Level AA</a>
-            &mdash; the standard required by
+            <a href="https://www.w3.org/WAI/WCAG2AA-Conformance" target="_blank" rel="noopener noreferrer">WCAG 2.0 Level AA</a>,
+            the standard required by
             <a href="https://www.ontario.ca/laws/regulation/110191" target="_blank" rel="noopener noreferrer">O. Reg. 191/11</a>
             under the AODA.
         </p>
 
-        <p th:if="${job.status.name() == 'FAILED'}" class="interpretation" style="border-left-color: var(--critical)">
+        <p th:if="${job.status.name() == 'FAILED'}" class="interpretation interpretation-failed">
             Scan failed: <span th:text="${job.errorMessage}">error</span>
         </p>
     </section>
 
-    <section aria-labelledby="interpretation-heading" th:if="${job.interpretation != null}">
+    <section class="report-section" aria-labelledby="interpretation-heading" th:if="${job.interpretation != null}">
         <h2 id="interpretation-heading">Summary</h2>
         <div class="interpretation" th:utext="${interpretationHtml}">AI-generated summary appears here.</div>
     </section>
-    <section aria-labelledby="interpretation-heading" th:if="${job.status.name() == 'DONE' and job.interpretation == null}">
+    <section class="report-section" aria-labelledby="interpretation-heading" th:if="${job.status.name() == 'DONE' and job.interpretation == null}">
         <h2 id="interpretation-heading">Summary</h2>
         <p class="empty-state">No AI summary is available for this scan.</p>
     </section>
 
-    <section aria-labelledby="pages-heading">
+    <section class="report-section" aria-labelledby="criteria-heading" th:if="${!#lists.isEmpty(criterionSummaries) or bestPracticeCount > 0}">
+        <h2 id="criteria-heading">Failed success criteria</h2>
+        <div class="table-wrap criteria-index">
+        <table>
+            <caption>WCAG success criteria with at least one violation, in spec order</caption>
+            <thead>
+            <tr>
+                <th scope="col">Criterion</th>
+                <th scope="col">Name</th>
+                <th scope="col">Level</th>
+                <th scope="col" class="num">Violations</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cs : ${criterionSummaries}">
+                <td><span class="sc" th:text="${cs.criterion.number}">1.4.3</span></td>
+                <td th:text="${#strings.isEmpty(cs.criterion.name)} ? 'Success criterion ' + ${cs.criterion.number} : ${cs.criterion.name}">Contrast (Minimum)</td>
+                <td><span class="level" th:text="${cs.criterion.level}">AA</span></td>
+                <td class="num" th:text="${cs.count}">0</td>
+            </tr>
+            <tr th:if="${bestPracticeCount > 0}">
+                <td><span class="sc-best">None</span></td>
+                <td>Best-practice rules (not tied to a WCAG criterion)</td>
+                <td></td>
+                <td class="num" th:text="${bestPracticeCount}">0</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+    <section class="report-section" aria-labelledby="pages-heading">
         <h2 id="pages-heading">Violations by page</h2>
 
         <div class="category-summary" th:if="${!#lists.isEmpty(categorySummaries)}"
@@ -94,6 +126,7 @@
                 <thead>
                 <tr>
                     <th scope="col">Impact</th>
+                    <th scope="col">WCAG</th>
                     <th scope="col">Category</th>
                     <th scope="col">Rule</th>
                     <th scope="col">Description</th>
@@ -103,6 +136,12 @@
                 <tbody>
                 <tr th:each="v : ${pr.violations}" th:attr="data-category=${v.category.slug}">
                     <td><span class="impact" th:classappend="'impact-' + ${v.impact}" th:text="${v.impact}">critical</span></td>
+                    <td>
+                        <span class="sc-list" th:unless="${#lists.isEmpty(v.successCriteria)}">
+                            <span class="sc" th:each="c : ${v.successCriteria}" th:text="${c.number}" th:title="${c.name}">1.4.3</span>
+                        </span>
+                        <span class="sc-best" th:if="${#lists.isEmpty(v.successCriteria)}">Best practice</span>
+                    </td>
                     <td><span class="category" th:classappend="'category-' + ${v.category.slug}" th:text="${v.category.label}">Category</span></td>
                     <td>
                         <a th:if="${v.helpUrl != null}" th:href="${v.helpUrl}" th:text="${v.ruleId}" target="_blank" rel="noopener noreferrer">rule-id</a>
@@ -116,7 +155,7 @@
             </div>
         </article>
     </section>
-        </div>
+        </main>
     </div>
 </div>
 <script defer src="/shell.js"></script>

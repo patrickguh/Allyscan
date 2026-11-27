@@ -1,6 +1,7 @@
 package ca.allyscan.audit;
 
 import jakarta.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -62,5 +63,10 @@ public class Violation {
 
     public ViolationCategory getCategory() {
         return ViolationCategory.fromTagsCsv(tags);
+    }
+
+    /** WCAG success criteria this rule tests; empty for axe "best-practice" rules. */
+    public List<WcagCriterion> getSuccessCriteria() {
+        return WcagCriterion.fromTagsCsv(tags);
     }
 }
