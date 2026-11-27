@@ -1,175 +1,126 @@
 ---
 name: Allyscan
-description: An accessibility auditor that reads like the standard it enforces.
+description: A website accessibility scanner that shows its own report as the product.
 colors:
-  signal-light: "#1747c8"
-  signal-dark: "#8cb0ff"
-  signal-soft-light: "#e9eefb"
-  signal-soft-dark: "#1c2540"
-  ink-light: "#16181d"
-  ink-dark: "#ecedef"
-  muted-light: "#50555f"
-  muted-dark: "#a3a8b2"
-  page-light: "#ffffff"
-  page-dark: "#121317"
-  panel-light: "#f4f5f7"
-  panel-dark: "#1b1d22"
-  rule-light: "#d9dce1"
-  rule-dark: "#2c2f36"
-  rule-strong-light: "#767c86"
-  rule-strong-dark: "#6c717b"
-  rail-light: "#16181d"
-  rail-dark: "#0a0b0d"
-  rail-ink: "#f2f3f5"
-  rail-muted: "#a9afb9"
-  critical-light: "#b42318"
+  page-dark: "#0a0d14"
+  surface-dark: "#131824"
+  ink-dark: "#e9edf3"
+  muted-dark: "#8891a1"
+  accent-dark: "#5ab9fc"
+  accent-ink-dark: "#0a0d14"
+  page-light: "#dfdedb"
+  surface-light: "#d3d2ce"
+  ink-light: "#26251e"
+  muted-light: "#55544d"
+  accent-light: "#1f4fc9"
+  accent-ink-light: "#ffffff"
+  rail-dark: "#070a10"
+  rail-light: "#26251e"
   critical-dark: "#ff8a80"
-  serious-light: "#9a4500"
   serious-dark: "#ffb566"
-  moderate-light: "#665a00"
   moderate-dark: "#e2d266"
-  minor-light: "#4b525c"
   minor-dark: "#b8bec8"
-  ok-light: "#1c6b36"
-  ok-dark: "#6fd08c"
+  critical-light: "#b42318"
+  serious-light: "#94420a"
+  moderate-light: "#665a00"
+  minor-light: "#45443e"
 typography:
   display:
-    fontFamily: "Atkinson Hyperlegible Next, system-ui, sans-serif"
-    fontSize: "clamp(2rem, 4.5vw, 3rem)"
-    fontWeight: 800
-    lineHeight: 1.2
-    letterSpacing: "-0.03em"
+    fontFamily: "Host Grotesk, system-ui, sans-serif"
+    fontSize: "52px"
+    fontWeight: 500
+    lineHeight: 1.04
+    letterSpacing: "-0.035em"
   heading:
-    fontFamily: "Atkinson Hyperlegible Next, system-ui, sans-serif"
-    fontSize: "1.35rem"
-    fontWeight: 700
-    lineHeight: 1.2
-    letterSpacing: "-0.015em"
+    fontFamily: "Host Grotesk, system-ui, sans-serif"
+    fontSize: "48px"
+    fontWeight: 500
+    lineHeight: 1.1
+    letterSpacing: "-0.035em"
   body:
-    fontFamily: "Atkinson Hyperlegible Next, system-ui, sans-serif"
-    fontSize: "1rem"
+    fontFamily: "Host Grotesk, system-ui, sans-serif"
+    fontSize: "16px"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.55
     letterSpacing: "0em"
   data:
-    fontFamily: "Atkinson Hyperlegible Mono, ui-monospace, monospace"
-    fontSize: "0.93rem"
-    fontWeight: 600
-    lineHeight: 1.5
-    letterSpacing: "-0.04em"
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: "13px"
+    fontWeight: 500
+    lineHeight: 1.4
+    letterSpacing: "0em"
 rounded:
-  base: "2px"
-  logo: "25%"
-spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
-  xl: "40px"
+  sm: "4px"
+  md: "6px"
+  lg: "8px"
 components:
   button-primary:
-    backgroundColor: "{colors.signal-light}"
-    textColor: "{colors.page-light}"
-    rounded: "{rounded.base}"
-    padding: "10px 20px"
-    height: "44px"
-  button-secondary:
-    backgroundColor: "{colors.page-light}"
-    textColor: "{colors.ink-light}"
-    rounded: "{rounded.base}"
-    padding: "9px 16px"
+    backgroundColor: "{colors.accent-dark}"
+    textColor: "{colors.accent-ink-dark}"
+    rounded: "{rounded.sm}"
     height: "44px"
   input:
-    backgroundColor: "{colors.page-light}"
-    textColor: "{colors.ink-light}"
-    rounded: "{rounded.base}"
-    padding: "9px 12px"
+    backgroundColor: "{colors.page-dark}"
+    textColor: "{colors.ink-dark}"
+    rounded: "{rounded.sm}"
     height: "44px"
-  sidebar:
-    backgroundColor: "{colors.rail-light}"
-    textColor: "{colors.rail-ink}"
-    width: "240px"
 ---
 
 # Design System: Allyscan
 
 ## Overview
 
-**North star: the spec sheet.** Allyscan checks websites against WCAG 2.0 AA, so it should look like the standard it enforces: indexed, exact and calm. Every finding is filed under its WCAG success-criterion number (1.4.3, 4.1.2) the way the spec itself is organized. The design refuses the category defaults of score dials, rounded stat cards and gradient SaaS colors.
+Two layers, one palette:
 
-Mode is **Operate**: people come here to run a scan and read a report. The world contributes type, palette, density and one signature move (the criterion index). Navigation and controls stay standard.
+- **The home page** (`templates/scans.html`, `static/home.css`) is built with the Taste Skill kit
+  (`static/assets/`, copied from `.claude/skills/design-taste-frontend/assets`). It is a software page:
+  one section per screen, the product's own report shown as live HTML, one effect and two scroll moments.
+  The plan and the deal that produced it are in `.taste-skill/plan.md`.
+- **The app pages** (report, scan history, how it works, settings, sign-in) use `static/style.css`: the
+  same tokens and fonts in a denser working layout with a sidebar, checked with Impeccable.
 
-The product must pass its own scan. Every text pair meets WCAG AA 4.5:1 in both themes, and axe-core reports zero violations on every page.
+Dark is the default for every visitor. Light (Settings, or System on a light OS) swaps to the deal's
+second palette, stone and blueprint blue. Every text pair is checked to WCAG 2.0 AA, and axe-core reports
+zero violations on every page in both themes at desktop and phone widths.
 
 ## Colors
 
-Strategy: **restrained, with a committed shell.** The ink sidebar is a solid field in both themes; the work area is paper (light) or graphite (dark). One signal blue does the real jobs: links, focus, primary actions, selection.
-
-### Primary
-- **Signal** (`#1747c8` light / `#8cb0ff` dark): links, primary buttons, focus ring, text selection, the RUNNING status. White on it is 7.6:1; ink `#0d1220` on the dark version is 8.7:1.
-
-### Neutral
-- **Ink / Page / Panel / Rule**: text, ground, quiet fills (quotes, table headers) and hairlines. Muted text is 7.5:1 on page.
-- **Rail** (`#16181d` / `#0a0b0d`): the sidebar and mobile top bar. Its focus ring uses the light signal `#8cb0ff`.
-
-### Impact and status
-Critical red, serious amber, moderate olive, minor slate, OK green. Each is used only as text on its own soft tint, and each impact also has a **shape** (triangle, square, circle, dash), so color is never the only cue (WCAG 1.4.1).
-
-### Named rules
-- **No gradients, ever.** No gradient text, no radial glows, no gradient buttons.
-- **Theme tokens only.** Never hard-code a color in a template; the one exception is the logo square, which stays `#1747c8` in both themes.
+- **Dark:** near-black ground `#0a0d14`, surface `#131824`, ink `#e9edf3`, sky-blue accent `#5ab9fc`
+  (links, the one filled button, focus). Developers read code on dark editors; the accent is the colour of
+  a link and a focus ring, the two things an accessibility tool talks about most.
+- **Light:** stone `#dfdedb`, ink `#26251e`, blueprint blue `#1f4fc9`.
+- **Impact:** critical, serious, moderate, minor in red, amber, olive and slate, always with a shape
+  (triangle, square, circle, dash) so colour is never the only cue (WCAG 1.4.1).
+- Never violet or lavender; never gradient text.
 
 ## Typography
 
-**Atkinson Hyperlegible Next** for all text, **Atkinson Hyperlegible Mono** for data. Both come from the Braille Institute and were designed for low-vision readers, which fits an accessibility product. They are self-hosted as variable WOFF2 files in `static/fonts/`.
-
-### Hierarchy
-- Display (home h1): clamp(2rem, 4.5vw, 3rem), 800, -0.03em.
-- Page heading: clamp(1.75rem, 3.5vw, 2.25rem), 800.
-- Section h2: 1.35rem, 700. Doc-section h2 on home: up to 1.75rem, 800.
-- Body: 1rem / 1.6. Paragraph measure capped at 36em (about 75 characters).
-- Data (mono): criterion numbers, URLs, selectors, counts, dates, status labels. Never decoration.
+Host Grotesk (headings at 500, text at 400) and JetBrains Mono for data only: WCAG criterion numbers,
+URLs, selectors, counts. Loaded from Google Fonts.
 
 ## Layout
 
-Fixed 240px ink sidebar on desktop; at 56rem and below it becomes an off-canvas drawer behind an ink top bar. The work area is left-aligned, max 64rem, with side padding clamp(1rem, 4vw, 3rem). Sections are separated by 1px rules and vertical space, not by cards.
-
-## Elevation & Depth
-
-Flat. No shadows. Depth comes from hairline rules (`rule`), heavier ink rules that open an index (the principles row and the steps list start with a 1px ink line), and panel tints.
-
-## Shapes
-
-2px corners on everything (buttons, inputs, tables, tags, panels). The one exception is the logo mark, a rounded square (25%) kept from the original identity.
+- Home: the kit's 12-column `.wrap` (1280 at 1440), sections exactly one or two screens, hero alone on the
+  first screen (triptych: headline, a collage of report pieces, the scan form).
+- App pages: a 240px sidebar (dark rail in both themes) and a left-aligned work area up to 64rem.
 
 ## Components
 
-### Buttons
-Primary: signal fill, 44px tall, bold label. Hover adds a 1px inset ring; active nudges down 1px. Secondary (`.law-links a`): page fill, strong-rule border, ink text, panel fill on hover.
-
-### Inputs / Fields
-Page fill, 1px strong-rule border (4.2:1 against the page), 44px tall. Focus: 3px signal outline. The home URL field and its Scan button join into one control.
-
-### Chips
-Category filters are square-cornered toggle buttons with a mono count; pressed is ink-filled. Status and impact tags are tint-on-soft with a mono label (status) or a shape marker (impact).
-
-### Navigation
-Sidebar links: rail-ink text, muted icons, rail-hover background; the active link gets the rail-active fill and bold weight. No side stripes.
-
-### Criterion index (signature component)
-The report's "Failed success criteria" table lists every WCAG criterion that failed, in spec order (1.4.4 before 1.4.10), with name, level and violation count, plus a row for best-practice rules. Each violation row also carries its criterion numbers in a WCAG column. The data comes from axe-core's `wcagNNN` tags via `WcagCriterion.java`.
+- **Report window** (home, `#report`): the kit's `window` fragment as the page list and its `doc`
+  fragment as the open page with marked issues. Demonstration data only (no real site is named).
+- **Criterion index** (report page): every failed WCAG criterion in spec order with name, level and
+  count, from axe-core's `wcagNNN` tags via `WcagCriterion.java`.
+- **Diagrams:** the kit's lanes (crawl) and hub (stack, with the real Spring, Postgres, Playwright, Java
+  and Fly.io marks), held still until hovered (`data-dg-still`).
 
 ## Do's and Don'ts
 
-### Do:
-- File every finding under its WCAG number when one exists.
-- Use mono only for real data: numbers, URLs, selectors.
-- Pair every status color with a label or shape.
-- Re-run axe-core and `impeccable detect` after UI changes; both should report zero.
+### Do
+- Run `node .claude/skills/design-taste-frontend/scripts/gate.mjs <url>` after changing the home page,
+  and `impeccable detect` plus axe-core after changing any page.
+- Keep one filled button style per view and the main action worded "Scan a website" everywhere.
 
-### Don't:
-- Don't add gradients, glows, glass, or colored side stripes on boxes.
-- Don't put a small uppercase kicker label above a heading.
-- Don't use cards as the default container; use rules and space.
-- Don't use purple, or any second accent color competing with signal blue.
-- Don't hard-code colors outside the token blocks in `style.css`.
+### Don't
+- Don't edit files under `static/assets/` (the kit); write page CSS in `home.css`.
+- Don't add kicker labels, side-stripe borders, glows or a second accent.
+- Don't invent customers, figures or quotes on the home page.

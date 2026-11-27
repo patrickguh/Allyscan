@@ -1,61 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap");
+
 /* ==========================================================================
-   Allyscan: "spec sheet" design system
-   Reads like the standard it enforces: ink sidebar, paper work area,
-   hairline rules, square corners, one signal blue, and WCAG success
-   criterion numbers set in mono as the report's index.
+   Allyscan app pages (report, history, settings, sign-in): the same system as the home page
+   (Taste Skill deal: palette blue-black-cornflower, light grade stone-blueprint, Host Grotesk +
+   JetBrains Mono, sharp radius). WCAG success-criterion numbers in mono stay the report's index.
    Every text/background pair below is checked to WCAG 2.0 AA (4.5:1).
    ========================================================================== */
-
-/* ---------- fonts (self-hosted, variable) ---------- */
-
-@font-face {
-    font-family: "Atkinson Hyperlegible Next";
-    font-style: normal;
-    font-weight: 200 800;
-    font-display: swap;
-    src: url("fonts/atkinson-hyperlegible-next-latin-ext.woff2") format("woff2");
-    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-    font-family: "Atkinson Hyperlegible Next";
-    font-style: normal;
-    font-weight: 200 800;
-    font-display: swap;
-    src: url("fonts/atkinson-hyperlegible-next-latin.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-    font-family: "Atkinson Hyperlegible Next";
-    font-style: italic;
-    font-weight: 200 800;
-    font-display: swap;
-    src: url("fonts/atkinson-hyperlegible-next-italic-latin-ext.woff2") format("woff2");
-    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-    font-family: "Atkinson Hyperlegible Next";
-    font-style: italic;
-    font-weight: 200 800;
-    font-display: swap;
-    src: url("fonts/atkinson-hyperlegible-next-italic-latin.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-    font-family: "Atkinson Hyperlegible Mono";
-    font-style: normal;
-    font-weight: 200 800;
-    font-display: swap;
-    src: url("fonts/atkinson-hyperlegible-mono-latin-ext.woff2") format("woff2");
-    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-    font-family: "Atkinson Hyperlegible Mono";
-    font-style: normal;
-    font-weight: 200 800;
-    font-display: swap;
-    src: url("fonts/atkinson-hyperlegible-mono-latin.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 
 /* ---------- tokens ----------
    Dark is the default for every visitor, regardless of OS preference.
@@ -65,26 +15,26 @@
 :root {
     color-scheme: dark;
 
-    --page: #121317;
-    --panel: #1b1d22;
-    --panel-2: #22252b;
-    --rule: #2c2f36;
-    --rule-strong: #6c717b;
-    --ink: #ecedef;
-    --muted: #a3a8b2;
+    --page: #0a0d14;
+    --panel: #131824;
+    --panel-2: #1a2030;
+    --rule: #232a3a;
+    --rule-strong: #5b6475;
+    --ink: #e9edf3;
+    --muted: #8891a1;
 
-    --signal: #8cb0ff;
-    --signal-ink: #0d1220;
-    --signal-soft: #1c2540;
-    --focus: #8cb0ff;
+    --signal: #5ab9fc;
+    --signal-ink: #0a0d14;
+    --signal-soft: #10243a;
+    --focus: #5ab9fc;
 
-    --rail: #0a0b0d;
-    --rail-rule: #23252b;
-    --rail-ink: #f2f3f5;
-    --rail-muted: #a9afb9;
-    --rail-hover: #1d1f24;
-    --rail-active: #2a2d34;
-    --rail-focus: #8cb0ff;
+    --rail: #070a10;
+    --rail-rule: #1b2130;
+    --rail-ink: #e9edf3;
+    --rail-muted: #8891a1;
+    --rail-hover: #121826;
+    --rail-active: #1b2234;
+    --rail-focus: #5ab9fc;
 
     --critical: #ff8a80;
     --critical-soft: #3a1716;
@@ -93,14 +43,14 @@
     --moderate: #e2d266;
     --moderate-soft: #302c10;
     --minor: #b8bec8;
-    --minor-soft: #23262c;
+    --minor-soft: #1b2130;
     --ok: #6fd08c;
     --ok-soft: #142a1b;
 
-    --font: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "Atkinson Hyperlegible Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --font: "Host Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-    --radius: 2px;
+    --radius: 4px;
     --rail-width: 15rem;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
     --dur: 160ms;
@@ -109,74 +59,74 @@
 :root[data-theme="light"] {
     color-scheme: light;
 
-    --page: #ffffff;
-    --panel: #f4f5f7;
-    --panel-2: #eceef1;
-    --rule: #d9dce1;
-    --rule-strong: #767c86;
-    --ink: #16181d;
-    --muted: #50555f;
+    --page: #dfdedb;
+    --panel: #d3d2ce;
+    --panel-2: #c9c8c3;
+    --rule: #c2c1bb;
+    --rule-strong: #77766f;
+    --ink: #26251e;
+    --muted: #55544d;
 
-    --signal: #1747c8;
+    --signal: #1f4fc9;
     --signal-ink: #ffffff;
-    --signal-soft: #e9eefb;
-    --focus: #1747c8;
+    --signal-soft: #cdd6ee;
+    --focus: #1f4fc9;
 
-    --rail: #16181d;
-    --rail-rule: #2e323a;
+    --rail: #26251e;
+    --rail-rule: #3a3931;
     --rail-ink: #f2f3f5;
-    --rail-muted: #a9afb9;
-    --rail-hover: #22252b;
-    --rail-active: #2e323a;
-    --rail-focus: #8cb0ff;
+    --rail-muted: #a9a8a1;
+    --rail-hover: #312f28;
+    --rail-active: #3a3931;
+    --rail-focus: #9db8ff;
 
     --critical: #b42318;
-    --critical-soft: #fdecea;
-    --serious: #9a4500;
-    --serious-soft: #fdf0e1;
+    --critical-soft: #f2d6d1;
+    --serious: #94420a;
+    --serious-soft: #f0dcc6;
     --moderate: #665a00;
-    --moderate-soft: #f6f3d8;
-    --minor: #4b525c;
-    --minor-soft: #eef0f2;
+    --moderate-soft: #e9e2bf;
+    --minor: #45443e;
+    --minor-soft: #cfcec9;
     --ok: #1c6b36;
-    --ok-soft: #e6f4ea;
+    --ok-soft: #cfe3d3;
 }
 
 @media (prefers-color-scheme: light) {
     :root[data-theme="system"] {
         color-scheme: light;
 
-        --page: #ffffff;
-        --panel: #f4f5f7;
-        --panel-2: #eceef1;
-        --rule: #d9dce1;
-        --rule-strong: #767c86;
-        --ink: #16181d;
-        --muted: #50555f;
+        --page: #dfdedb;
+        --panel: #d3d2ce;
+        --panel-2: #c9c8c3;
+        --rule: #c2c1bb;
+        --rule-strong: #77766f;
+        --ink: #26251e;
+        --muted: #55544d;
 
-        --signal: #1747c8;
+        --signal: #1f4fc9;
         --signal-ink: #ffffff;
-        --signal-soft: #e9eefb;
-        --focus: #1747c8;
+        --signal-soft: #cdd6ee;
+        --focus: #1f4fc9;
 
-        --rail: #16181d;
-        --rail-rule: #2e323a;
+        --rail: #26251e;
+        --rail-rule: #3a3931;
         --rail-ink: #f2f3f5;
-        --rail-muted: #a9afb9;
-        --rail-hover: #22252b;
-        --rail-active: #2e323a;
-        --rail-focus: #8cb0ff;
+        --rail-muted: #a9a8a1;
+        --rail-hover: #312f28;
+        --rail-active: #3a3931;
+        --rail-focus: #9db8ff;
 
         --critical: #b42318;
-        --critical-soft: #fdecea;
-        --serious: #9a4500;
-        --serious-soft: #fdf0e1;
+        --critical-soft: #f2d6d1;
+        --serious: #94420a;
+        --serious-soft: #f0dcc6;
         --moderate: #665a00;
-        --moderate-soft: #f6f3d8;
-        --minor: #4b525c;
-        --minor-soft: #eef0f2;
+        --moderate-soft: #e9e2bf;
+        --minor: #45443e;
+        --minor-soft: #cfcec9;
         --ok: #1c6b36;
-        --ok-soft: #e6f4ea;
+        --ok-soft: #cfe3d3;
     }
 }
 
@@ -288,7 +238,7 @@ code {
 }
 
 .sidebar-brand-text {
-    font-weight: 800;
+    font-weight: 500;
     font-size: 1.15rem;
     letter-spacing: -0.01em;
 }
@@ -474,8 +424,8 @@ code {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 25%;
-    background: #1747c8;
-    color: #ffffff;
+    background: #5ab9fc;
+    color: #0a0d14;
 }
 
 .logo-mark svg {
@@ -504,7 +454,7 @@ code {
 .page-narrow > header h1 {
     margin: 0;
     font-size: 1.25rem;
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -0.01em;
 }
 
@@ -720,7 +670,7 @@ label {
 
 .prompt-heading {
     font-size: clamp(2rem, 4.5vw, 3rem);
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -0.03em;
     margin: 0 0 0.75rem;
 }
@@ -832,7 +782,7 @@ label {
 
 .doc-section h2 {
     font-size: clamp(1.35rem, 2.6vw, 1.75rem);
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -0.02em;
 }
 
@@ -1179,7 +1129,7 @@ td.num {
 
 .report-title {
     font-size: clamp(1.75rem, 3vw, 2rem);
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -0.02em;
     margin: 0 0 1rem;
     overflow-wrap: anywhere;
@@ -1337,7 +1287,7 @@ form.new-scan label {
 
 .page-heading {
     font-size: clamp(1.75rem, 3.5vw, 2.25rem);
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -0.025em;
     margin: 0 0 0.5rem;
 }

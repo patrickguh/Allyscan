@@ -1,0 +1,4 @@
+[
+ { "check": "scroll-reveal", "target": "section#crawl", "reason": "the kit's own lanes diagram (assets/diagrams) colours its first pill when its layout runs on screen; it is held still with data-dg-still, and nothing on the page is revealed by scroll" },
+ { "check": "cut-text", "target": "dg-node--tile", "reason": "under 480px the kit's diagram turns its nodes into icon tiles with the caption set under each tile by design (diagram.js); the short labels Link, /, /book and /fleet are whole and readable" }
+]

@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Design tooling ###
+# Taste Skill (40 MB with its demo media): install it locally, see DESIGN.md
+.claude/skills/design-taste-frontend/
+# Taste Skill runtime files (browser profiles, screenshots, checker output); the plan and waivers are kept
+.taste-skill/*
+!.taste-skill/plan.md
+!.taste-skill/waivers.json

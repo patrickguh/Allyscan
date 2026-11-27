@@ -1,0 +1,216 @@
+/* impact marks: shape and colour, so colour is never the only cue */
+:root { --imp-crit: #ff8a80; --imp-ser: #ffb566; --imp-mod: #e2d266; --imp-min: #b8bec8; }
+
+/* the light grade (Settings > Light, or System on a light OS): the deal's second palette, stone and blueprint
+   blue, chosen once on load; every pair is checked to 4.5:1 or more (body text 7:1) */
+html[data-theme="light"] {
+  --p-bg: #dfdedb; --p-surface: #d3d2ce; --p-ink: #26251e; --p-muted: #55544d;
+  --p-accent: #1f4fc9; --p-accent-ink: #ffffff; --p-action: #1f4fc9; --p-action-ink: #ffffff;
+  --p-inv-bg: #26251e; --p-inv-surface: #33322b; --p-inv-ink: #dfdedb; --p-inv-muted: #a9a8a1;
+  --p-inv-accent: #dfdedb; --p-inv-accent-ink: #26251e; --p-inv-action: #dfdedb; --p-inv-action-ink: #26251e;
+  --imp-crit: #b42318; --imp-ser: #b45309; --imp-mod: #8a7600; --imp-min: #6b6a63;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: light) {
+  html[data-theme="system"] {
+    --p-bg: #dfdedb; --p-surface: #d3d2ce; --p-ink: #26251e; --p-muted: #55544d;
+    --p-accent: #1f4fc9; --p-accent-ink: #ffffff; --p-action: #1f4fc9; --p-action-ink: #ffffff;
+    --p-inv-bg: #26251e; --p-inv-surface: #33322b; --p-inv-ink: #dfdedb; --p-inv-muted: #a9a8a1;
+    --p-inv-accent: #dfdedb; --p-inv-accent-ink: #26251e; --p-inv-action: #dfdedb; --p-inv-action-ink: #26251e;
+    --imp-crit: #b42318; --imp-ser: #b45309; --imp-mod: #8a7600; --imp-min: #6b6a63;
+    color-scheme: light;
+  }
+}
+
+/* Allyscan home: page CSS only, for what sits inside a visual (the hero's collage pieces, the report window,
+   the report fragments in the criteria cards) and the AODA dates. Everything else is the kit's system. */
+
+/* the logo: the client's own mark (the line in the rounded tile), kept from the old identity */
+.logo-tile { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 25%;
+  background: var(--accent); color: var(--accent-ink); margin-right: 10px; flex: none; }
+.logo-tile svg { width: 18px; height: 18px; }
+
+/* hero: the scan form sits in the button column */
+.hero--triptych .hero__cta { flex-direction: column; align-items: stretch; justify-content: center; gap: var(--s-4); }
+/* both side columns stand the full row (one ceiling), their contents centred in it */
+@media (min-width: 1280px) { .hero--triptych .hero__grid > :first-child, .hero--triptych .hero__cta { align-self: stretch; display: flex; flex-direction: column; justify-content: center; } }
+.scan-form { grid-template-columns: minmax(0, 1fr); gap: var(--s-3); }
+.scan-form .field label { font-size: var(--t-small); color: var(--ink); }
+.scan-form .btn-row { margin: 0; }
+.scan-form .btn { width: 100%; justify-content: center; }
+.hero__alt { align-self: flex-start; }
+
+/* collage pieces: drawn report parts, in the UI's own tokens */
+.ly-piece { padding: 16px 18px; font: 400 14px/1.45 var(--font-text); color: var(--ink); border: 1px solid var(--line); }
+.ly-piece .pc-k { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 10px;
+  font-size: 13px; font-weight: 500; color: var(--muted); }
+.ly-piece .pc-k span:only-child { margin-left: auto; }
+.pc-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 7px 0; border-top: 1px solid var(--line); }
+.pc-crit .pc-row { grid-template-columns: 56px 1fr auto; }
+.pc-row code, .pc-code, .pc-sc { font-family: var(--font-mono); font-size: 13px; }
+.pc-sc { color: var(--accent); font-weight: 500; }
+.pc-n { font-family: var(--font-mono); font-size: 13px; min-width: 2ch; text-align: right; }
+.pc-n.is-hot { color: var(--accent); }
+.pc-t { margin: 0 0 8px; font-weight: 500; font-size: 15px; }
+.pc-code { display: block; padding: 8px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-sm); margin-bottom: 8px; }
+.pc-m { margin: 0; font: 400 13px/1.4 var(--font-mono); color: var(--muted); }
+.pc-imp { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--ink); }
+.pc-imp::before { content: ""; width: 9px; height: 9px; background: var(--imp-crit); flex: none; }
+.pc-imp--crit::before { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.pc-imp--ser::before { background: var(--imp-ser); }
+.pc-imp--mod::before { background: var(--imp-mod); border-radius: 50%; }
+.pc-imp--min::before { background: var(--imp-min); height: 3px; }
+.pc-sw { display: grid; grid-template-columns: 1fr 1fr; height: calc(100% - 34px); gap: 8px; }
+.pc-sw span { display: grid; place-items: center; border-radius: var(--r-sm); font: 500 28px/1 var(--font-text); }
+.pc-sw__a { background: #ffffff; color: #9aa0a8; }
+.pc-sw__b { background: #ffffff; color: #4b525c; }
+.pc-contrast .pc-k { margin: 10px 0 0; justify-content: flex-start; color: var(--ink); }
+.pc-bars { display: grid; gap: 8px; }
+.pc-bars i { display: grid; grid-template-columns: 72px 1fr; align-items: center; font: normal 400 13px/1 var(--font-text); color: var(--muted); }
+.pc-bars i::before { content: attr(data-l); }
+.pc-bars i::after { content: ""; height: 8px; width: calc(var(--k) * 100%); background: var(--accent); border-radius: 2px; }
+.pc-step { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); color: var(--muted); }
+.pc-step span { width: 10px; height: 10px; border: 1.5px solid currentColor; border-radius: 50%; flex: none; }
+.pc-step.is-done { color: var(--ink); } .pc-step.is-done span { background: var(--accent); border-color: var(--accent); }
+.pc-step.is-on { color: var(--ink); } .pc-step.is-on span { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent); }
+
+/* the report window (app-frame recipe, sections-library.md) */
+.report-intro { display: grid; gap: var(--s-4); align-content: start; }
+.report-intro p, .crawl-intro { margin: 0; color: var(--ink); font-size: var(--t-lead); line-height: 1.5; }
+.app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
+.app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+.app > .app__pane + .app__pane { border-left: 1px solid var(--u-line); }
+.app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+.app > .app__pane > .ui-doc { padding: 32px 40px; }
+.app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
+@media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+@media (max-width: 1023px) {
+  .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .app > .app__pane--list { max-height: 252px; }
+  .app > .app__pane--list::after { display: none; }
+  .app .ui-win__side { display: none; }
+  .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+  .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
+}
+@media (max-width: 639px) {
+  .app.ui { grid-template-rows: minmax(0, 1fr); }
+  .app > .app__pane--list { display: none; }
+  .app > .app__pane + .app__pane { border-top: 0; }
+  .app > .app__pane > .ui-doc { padding: 20px; }
+}
+
+/* the crawl frame: the page's one effect behind the lanes diagram */
+.frame--crawl { margin-top: var(--s-7); position: relative; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); }
+.frame--crawl > .dg { position: absolute; inset: 0; z-index: 1; }
+
+/* report fragments in the criteria cards */
+#criteria .panel { --p-h: 260px; }
+.rp-crit, .rp-imp, .rp-chips { padding: 14px 16px; font: 400 14px/1.4 var(--font-text); }
+.rp-head, .rp-row { display: grid; grid-template-columns: 64px 1fr 44px 48px; gap: 10px; padding: 8px 0; }
+.rp-head { font-size: 13px; color: var(--u-muted); border-bottom: 1px solid var(--u-line-2); }
+.rp-row { border-bottom: 1px solid var(--u-line); }
+.rp-row > :nth-child(3), .rp-row > :nth-child(4) { font-family: var(--font-mono); font-size: 13px; }
+.rp-row > :nth-child(4), .rp-head > :nth-child(4) { text-align: right; }
+.rp-irow { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--u-line); align-items: center; }
+.rp-irow > :last-child { font-size: 14px; }
+.rp-chips { display: flex; flex-wrap: wrap; gap: 8px; align-content: start; }
+.rp-chips .rp-irow { width: 100%; }
+.rp-chip { display: inline-flex; gap: 6px; padding: 6px 10px; border: 1px solid var(--u-line-2); border-radius: var(--r-sm); font-size: 13px; font-weight: 500; }
+.rp-chip em { font: normal 400 13px var(--font-mono); color: var(--u-muted); }
+.rp-chip.is-on { background: var(--u-ink); color: var(--u-bg); border-color: var(--u-ink); }
+.rp-chip.is-on em { color: var(--u-bg); }
+#criteria .panel > .dg { position: absolute; inset: 0; }
+
+/* AODA: the two dates set large (the section's type moment) */
+.aoda-p { color: var(--ink); font-size: var(--t-lead); line-height: 1.55; margin: var(--s-6) 0; max-width: 46ch; }
+.aoda-dates { display: grid; gap: var(--s-7); align-content: start; }
+.aoda-date { border-top: 1px solid var(--line-strong); padding-top: var(--s-7); }
+.aoda-date__d { margin: 0; font: var(--display-weight) clamp(32px, 3vw, 46px)/1.05 var(--font-display); letter-spacing: var(--display-tracking); }
+.aoda-date__t { margin: var(--s-3) 0 0; color: var(--ink); max-width: 44ch; }
+
+/* questions beside their heading */
+#questions .faq { align-self: start; }
+
+/* filled pieces: a big figure, and the swatches taking the piece's height */
+.pc-big { margin: 0 0 6px; font: var(--display-weight) 56px/1 var(--font-display); letter-spacing: var(--display-tracking); }
+.pc-sum, .pc-lvl { display: flex; flex-direction: column; }
+.pc-sum .pc-big, .pc-lvl .pc-big { margin-top: auto; }
+.pc-contrast { display: flex; flex-direction: column; }
+.pc-sw { flex: 1; height: auto; }
+.pc-focus .pc-t { font-size: 20px; }
+
+/* phone: the criteria cards' panels shorter so the four stack inside two screens */
+@media (max-width: 639px) { #criteria .panel { --p-h: 178px; } #criteria .card > p { font-size: 15px; } }
+/* tablet: the questions stand alone under their heading, so each answer gets more air */
+@media (min-width: 640px) and (max-width: 1023px) { #questions .faq > .faq__item { padding-block: var(--s-7); } }
+
+/* phone: the hero holds the words, the collage and the form in one screen; the example report link waits for the
+   report section, which carries it too */
+@media (max-width: 639px) {
+  .hero--triptych .hero__cta { gap: 0; }
+  .hero__alt { display: none; }
+  .scan-form { gap: var(--s-2); }
+  .scan-form .form__status:empty { display: none; }
+}
+
+/* the close: the one main button at the hero's size, and the name with room for its ascenders */
+.closing__cta .btn.btn--primary { height: 64px; padding-inline: var(--s-6); font-size: var(--t-lead); }
+@media (max-width: 1023px) { .closing__cta .btn.btn--primary { height: 56px; font-size: var(--t-body); } }
+.close__word { line-height: 1; padding-top: .04em; }
+
+/* questions: the notice a guest report really shows, under the heading */
+.faq-side { display: grid; gap: var(--s-7); align-content: start; }
+.faq-side h2 { margin: 0; }
+.guest-note { padding: 20px 22px; font: 400 15px/1.5 var(--font-text); max-width: 440px; }
+.guest-note__head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: 500; }
+.guest-note__head svg { width: 18px; height: 18px; fill: none; stroke: var(--u-accent); stroke-width: 1.5; }
+.guest-note__t { margin-left: auto; font: 400 13px var(--font-mono); color: var(--u-muted); }
+.guest-note p { margin: 0 0 14px; color: var(--u-ink); }
+.guest-note__btn { display: inline-block; padding: 8px 12px; border: 1px solid var(--u-line-2); border-radius: var(--r-sm); font-size: 14px; font-weight: 500; }
+
+/* the AODA quote: the regulation's own words */
+.aoda-quote { margin: 0 0 var(--s-6); padding-left: 0; font-style: italic; font-size: var(--t-lead); line-height: 1.55; color: var(--ink); max-width: 46ch; }
+
+/* the guest report mock above its notice */
+.guest-note__report { margin: -20px -22px 18px; padding: 18px 22px; border-bottom: 1px solid var(--u-line); background: var(--u-fill); }
+.guest-note__url { margin: 0 0 12px; font-weight: 500; }
+.guest-note__url code { font: 400 14px var(--font-mono); color: var(--u-accent-text); }
+.guest-note__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.guest-note__stats span { display: grid; font-size: 13px; color: var(--u-muted); }
+.guest-note__stats b { font: 500 20px/1.3 var(--font-mono); color: var(--u-ink); }
+
+/* small screens: the drawn pieces keep only the rows that fit, so nothing is cut mid-line */
+@media (max-width: 1023px) {
+  .pc-pages .pc-row:nth-of-type(n+5), .pc-crit .pc-row:nth-of-type(n+4) { display: none; }
+}
+@media (max-width: 639px) {
+  .pc-pages .pc-row:nth-of-type(n+4), .pc-crit .pc-row:nth-of-type(n+3) { display: none; }
+  .rp-crit .rp-row:nth-of-type(n+5), .rp-imp .rp-irow:nth-of-type(n+3), .rp-chips .rp-irow { display: none; }
+  .frame--crawl { min-height: 400px; }
+}
+
+/* phone: the AODA section keeps one screen; the regulation's words stay a link away */
+@media (max-width: 639px) {
+  .aoda-quote { display: none; }
+  .aoda-dates { gap: var(--s-5); margin-top: var(--s-6); }
+  .aoda-date { padding-top: var(--s-4); }
+  .aoda-p { margin: var(--s-5) 0; }
+}
+
+/* AODA and the questions run to the foot of their screen like every other section: the dates spread down
+   their column (the last ends on the section's last line), the guest notice stands at the column's foot */
+@media (min-width: 1024px) {
+  .aoda-grid, .faq-grid { align-items: stretch; }
+  .aoda-dates { align-content: space-between; height: 100%; }
+  .faq-side { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+}
+
+/* the narrowest phones: the nav's button and the menu button stay inside the right line */
+@media (max-width: 359px) { .nav__actions .btn { padding-inline: 12px; font-size: 14px; } }
+
+/* the contrast sample: drawn, not text, so the page itself never ships a failing pair */
+.pc-sw__a::before, .pc-sw__b::before { content: "Aa"; }
+#why h2.mo-wh__text { margin: 0; }
+
+/* the URL field's placeholder in the page's muted ink (6:1), not the browser's grey */
+.field input::placeholder { color: var(--muted); opacity: 1; }
